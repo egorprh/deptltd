@@ -1,0 +1,630 @@
+/* ========================================
+   DEPARTMENT WEBSITE - UNIFIED CSS
+   ======================================== */
+
+/* ========================================
+   CSS VARIABLES & DESIGN SYSTEM
+   ======================================== */
+
+:root {
+  /* Color Palette */
+  --color-primary: #256CFA;
+  --color-primary-hover: #1e5ce6;
+  --color-primary-light: #4d7ffa;
+  --color-primary-dark: #1a4bb8;
+  
+  --color-secondary: #6c757d;
+  --color-success: #28a745;
+  --color-warning: #ffc107;
+  --color-danger: #dc3545;
+  --color-info: #17a2b8;
+  
+  --color-dark: #171717;
+  --color-light: #f8f9fa;
+  --color-white: #ffffff;
+  
+  /* Opacity variants */
+  --color-white-50: rgba(255, 255, 255, 0.5);
+  --color-white-30: rgba(255, 255, 255, 0.3);
+  --color-white-10: rgba(255, 255, 255, 0.1);
+  --color-black-30: rgba(0, 0, 0, 0.3);
+  --color-black-10: rgba(0, 0, 0, 0.1);
+  
+  /* Typography Scale */
+  --font-size-xs: 0.75rem;    /* 12px */
+  --font-size-sm: 0.875rem;   /* 14px */
+  --font-size-base: 1rem;     /* 16px */
+  --font-size-lg: 1.125rem;   /* 18px */
+  --font-size-xl: 1.25rem;    /* 20px */
+  --font-size-2xl: 1.5rem;    /* 24px */
+  --font-size-3xl: 1.875rem;   /* 30px */
+  --font-size-4xl: 2.25rem;   /* 36px */
+  --font-size-5xl: 3rem;      /* 48px */
+  --font-size-6xl: 4rem;      /* 64px */
+  
+  /* Font Weights */
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  
+  /* Line Heights */
+  --line-height-tight: 1.1;
+  --line-height-normal: 1.375;
+  --line-height-relaxed: 1.5;
+  --line-height-loose: 1.75;
+  
+  /* Spacing Scale */
+  --spacing-0: 0;
+  --spacing-1: 0.25rem;   /* 4px */
+  --spacing-2: 0.5rem;    /* 8px */
+  --spacing-3: 0.75rem;   /* 12px */
+  --spacing-4: 1rem;      /* 16px */
+  --spacing-5: 1.25rem;   /* 20px */
+  --spacing-6: 1.5rem;    /* 24px */
+  --spacing-8: 2rem;      /* 32px */
+  --spacing-10: 2.5rem;   /* 40px */
+  --spacing-12: 3rem;     /* 48px */
+  --spacing-16: 4rem;     /* 64px */
+  --spacing-20: 5rem;     /* 80px */
+  --spacing-24: 6rem;     /* 96px */
+  
+  /* Border Radius */
+  --radius-none: 0;
+  --radius-sm: 0.25rem;   /* 4px */
+  --radius-base: 0.375rem; /* 6px */
+  --radius-md: 0.5rem;    /* 8px */
+  --radius-lg: 0.75rem;   /* 12px */
+  --radius-xl: 1rem;      /* 16px */
+  --radius-2xl: 1.5rem;   /* 24px */
+  --radius-full: 9999px;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-base: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  
+  /* Transitions */
+  --transition-fast: 150ms ease-in-out;
+  --transition-base: 250ms ease-in-out;
+  --transition-slow: 350ms ease-in-out;
+  
+  /* Z-Index Scale */
+  --z-dropdown: 1000;
+  --z-sticky: 1020;
+  --z-fixed: 1030;
+  --z-modal-backdrop: 1040;
+  --z-modal: 1050;
+  --z-popover: 1060;
+  --z-tooltip: 1070;
+  
+  /* Font Families */
+  --font-primary: 'Manrope', sans-serif;
+  --font-secondary: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'SF Mono', monospace;
+}
+
+/* ========================================
+   BASE STYLES
+   ======================================== */
+
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: var(--font-secondary);
+  overflow-x: hidden;
+}
+
+/* ========================================
+   FONT LOADING
+   ======================================== */
+
+@font-face {
+    font-family: 'Manrope';
+  src: url('../assets/fonts/Manrope/Manrope.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'SF Pro Display';
+  src: url('../assets/fonts/San Francisco Pro Display/SF-Pro-Display-Regular.otf') format('opentype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'SF Pro Display';
+  src: url('../assets/fonts/San Francisco Pro Display/SF-Pro-Display-Medium.otf') format('opentype');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'SF Pro Display';
+  src: url('../assets/fonts/San Francisco Pro Display/SF-Pro-Display-Semibold.otf') format('opentype');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'SF Mono';
+  src: url('../assets/fonts/San Francisco Mono/SFMono-Regular.otf') format('opentype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'SF Mono';
+  src: url('../assets/fonts/San Francisco Mono/SFMono-Medium.otf') format('opentype');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* ========================================
+   SCROLL ANIMATIONS
+   ======================================== */
+
+.scroll-hidden {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.scroll-show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ========================================
+   HERO SECTION
+   ======================================== */
+
+.hero-section {
+  min-height: 100vh;
+  background: var(--color-white);
+  background-image: url('../assets/images/hero-bg.svg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  will-change: transform;
+  contain: layout style paint;
+}
+
+.hero-title {
+  font-family: 'Manrope', sans-serif;
+  font-weight: 500;
+  font-size: 72px;
+  line-height: 1.097;
+  letter-spacing: -0.06em;
+  color: var(--color-dark);
+  text-align: center;
+}
+
+.hero-description {
+  font-family: 'SF Pro Display', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.375;
+  letter-spacing: -0.01em;
+  color: var(--color-dark);
+}
+
+.hero-button {
+  font-family: 'SF Mono', monospace;
+  font-weight: 500;
+  font-size: 16.77px;
+  line-height: 0.75;
+  text-transform: uppercase;
+}
+
+/* ========================================
+   SECTION STYLES
+   ======================================== */
+
+.section-title {
+  font-family: 'Manrope', sans-serif;
+  font-weight: 500;
+  font-size: 40px;
+  line-height: 0.869;
+  letter-spacing: -0.04em;
+  color: var(--color-white);
+}
+
+.section-subtitle {
+  font-family: 'SF Mono', monospace;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 2.898;
+  letter-spacing: 0em;
+  color: rgba(255, 255, 255, 0.3);
+  text-transform: uppercase;
+}
+
+/* ========================================
+   PORTFOLIO SECTION
+   ======================================== */
+
+.portfolio-value {
+  font-family: 'Manrope', sans-serif;
+  font-weight: 500;
+  font-size: 96px;
+  line-height: 0.362;
+  letter-spacing: -0.01em;
+}
+
+.stat-label {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 1.5rem;
+  line-height: 1.45;
+  letter-spacing: -0.01em;
+}
+
+.stat-value {
+  font-family: 'Manrope', sans-serif;
+  font-weight: 600;
+  font-size: 52px;
+  line-height: 0.669;
+  letter-spacing: -0.03em;
+}
+
+/* Stat Card Components */
+.stat-card .stat-header {
+  background: var(--color-dark);
+  border-bottom: 1px solid var(--color-white-30);
+}
+
+/* Chart Components */
+.chart-container {
+  position: relative;
+  width: 277px;
+  height: 277px;
+  margin: 0 auto;
+}
+
+.chart-container img {
+  width: 100%;
+  height: auto;
+  max-width: 277px;
+  min-width: 277px;
+}
+
+.chart-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80px;
+  height: 80px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.chart-value {
+    font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--color-dark);
+  margin: 0;
+}
+
+.chart-subtitle {
+  font-family: var(--font-secondary);
+  font-weight: 400;
+  font-size: 0.75rem;
+  line-height: 1.2;
+  color: var(--color-dark);
+  text-align: center;
+  margin: 0;
+}
+
+.chart-segment {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: conic-gradient(
+    #D1F767 0deg 144deg,
+    #E8A005 144deg 216deg,
+    #FF5343 216deg 288deg,
+    #627EEA 288deg 360deg
+  );
+  position: relative;
+  display: block;
+}
+
+/* Assets List */
+.assets-list {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.asset-item {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.asset-item:last-child {
+  border-bottom: none;
+}
+
+.asset-icon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.asset-icon-img {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+
+/* Circular Chart */
+.circular-chart {
+  width: 200px;
+  height: 200px;
+  position: relative;
+  border-radius: 50%;
+  background: white;
+  will-change: background;
+  contain: layout style paint;
+}
+
+/* Icon Components */
+.stat-icon-circle {
+  width: 24px;
+  height: 24px;
+}
+
+.stat-icon-img {
+  width: 24px;
+  height: 24px;
+}
+
+.stat-icon img {
+  width: 32px;
+  height: 32px;
+}
+
+/* ========================================
+   TEAM SECTION
+   ======================================== */
+
+.team-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 14px;
+  object-fit: cover;
+  border: 2px solid var(--color-white);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.team-avatar:hover {
+  transform: scale(1.05);
+}
+
+/* Team member styles */
+.team-name {
+  font-family: 'Manrope', sans-serif;
+  font-weight: 500;
+  font-size: 28px;
+  line-height: 0.929;
+  letter-spacing: -0.03em;
+  color: var(--color-white);
+}
+
+.team-description {
+  font-family: 'Manrope', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1.357;
+  letter-spacing: -0.03em;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.team-tags .badge {
+  font-family: 'SF Mono', monospace;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 0.576;
+  text-transform: uppercase;
+  padding: 0.5rem 1rem;
+}
+
+/* Technology section styles */
+.tech-title {
+  font-family: 'Manrope', sans-serif;
+  font-weight: 500;
+  font-size: 28px;
+  line-height: 0.929;
+  letter-spacing: -0.03em;
+  color: var(--color-white);
+}
+
+.tech-description {
+  font-family: 'Manrope', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1.357;
+  letter-spacing: -0.03em;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.tech-tag {
+  font-family: 'SF Mono', monospace;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 0.576;
+  text-transform: uppercase;
+  color: var(--color-white);
+}
+
+.tech-tag .badge {
+  font-family: 'SF Mono', monospace;
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 0.691;
+  text-transform: uppercase;
+  background: var(--color-primary) !important;
+}
+
+/* Investment section styles */
+.investment-quote {
+  font-family: 'Manrope', sans-serif;
+  font-weight: 400;
+  font-size: 36px;
+  line-height: 1.306;
+  letter-spacing: 0.01em;
+  color: var(--color-white);
+  text-align: center;
+}
+
+.investment-text p {
+  font-family: 'Manrope', sans-serif;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 1.45;
+  color: var(--color-white);
+}
+
+/* ========================================
+   FOOTER STYLES
+   ======================================== */
+
+footer {
+  position: relative;
+}
+
+footer::after {
+  content: '';
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 10vh;
+  background-color: #212529;
+  z-index: -1;
+  pointer-events: none;
+}
+
+footer img {
+  max-width: 80px;
+  height: auto;
+  object-fit: contain;
+}
+
+.footer-partners img {
+  max-width: 60px;
+  height: auto;
+  filter: brightness(0) invert(1);
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+.footer-partners img:hover {
+  opacity: 1;
+}
+
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+
+.text-white-50 {
+  color: var(--color-white-50);
+}
+
+.border-white {
+  border-color: var(--color-white-30);
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 3rem;
+  }
+  
+  .section-title {
+    font-size: 2rem;
+  }
+  
+  .portfolio-value {
+    font-size: 4rem;
+  }
+  
+  .stat-value {
+    font-size: 2.5rem;
+  }
+  
+  .team-avatar {
+    width: 50px;
+    height: 50px;
+  }
+  
+  footer img {
+    max-width: 80px;
+  }
+  
+  .footer-partners img {
+    max-width: 60px;
+  }
+  
+  .chart-container {
+    width: 150px;
+    height: 150px;
+  }
+  
+  .chart-center {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .chart-value {
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .hero-title {
+    font-size: 2.5rem;
+  }
+  
+  .section-title {
+    font-size: 1.75rem;
+  }
+  
+  .portfolio-value {
+    font-size: 3rem;
+  }
+  
+  .stat-value {
+    font-size: 2rem;
+  }
+}
