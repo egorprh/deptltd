@@ -369,8 +369,9 @@ body {
 }
 
 .asset-icon {
-  width: 24px;
-  height: 24px;
+  width: 32px;
+  height: 32px;
+  background: #f8f9fa;
   display: flex;
   align-items: center;
   justify-content: center;
