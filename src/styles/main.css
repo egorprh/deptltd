@@ -178,14 +178,15 @@ body {
    ======================================== */
 
 .scroll-hidden {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  opacity: 0.1;
+  transform: translateY(30px) scale(0.9);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
 }
 
-.scroll-show {
+.scroll-visible {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
+  transition: opacity 0.6s ease-in, transform 0.6s ease-in;
 }
 
 /* ========================================
