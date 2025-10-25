@@ -1,294 +1,233 @@
 /**
- * Portfolio Data Manager
- * Handles dynamic loading and display of portfolio data from JSON
- * Manages wallet switching and data updates across the portfolio section
+ * Менеджер портфеля - Упрощенная версия
+ * Обрабатывает переключение кошельков и обновление данных портфеля
  */
 
-export class PortfolioManager {
-    constructor() {
-        this.data = null; // Portfolio data from JSON
-        this.activeWalletId = null; // Currently selected wallet ID
-        this.init();
-    }
+// Глобальные переменные для хранения состояния
+let portfolioData = null;        // Данные портфеля из JSON файла
+let activeWalletId = null;      // ID текущего активного кошелька
 
-    /**
-     * Initialize the portfolio manager
-     * Loads data, renders buttons, and sets active wallet
-     */
-    async init() {
-        try {
-            await this.loadData();
-            this.renderWalletButtons();
-            this.setActiveWallet(this.data.activeWalletId || this.data.wallets[0].id);
-        } catch (error) {
-            console.error('Error loading portfolio data:', error);
-        }
-    }
+// Конфигурация селекторов - используем ID и data-атрибуты вместо CSS классов
+const SELECTORS = {
+    portfolioValue: '#portfolio-value',           // Основное значение капитала
+    chartValue: '#chart-value',                   // Значение в центре круговой диаграммы
+    portfolioStat: '#portfolio-stat-value',       // Статистика портфеля в карточке
+    winrateStat: '#winrate-value',               // Значение винрейта
+    annualReturnStat: '#annual-return-value',    // Значение годовой доходности
+    yearlyReturn: '#yearly-return-value',         // Значение годовой доходности
+    assetsList: '#assets-list',                  // Контейнер списка активов
+    chartSegment: '#chart-segment',              // Сегмент круговой диаграммы
+    walletSelection: '#wallet-selection',        // Контейнер кнопок выбора кошелька
+    portfolioChart: '#portfolio-chart',           // График изменения портфеля
+    sharpeChart: '#sharpe-chart',                 // График коэффициента Шарпа
+    assetTemplate: '#asset-template'              // HTML шаблон для элементов активов
+};
 
-    /**
-     * Load portfolio data from JSON file with retry logic
-     * @param {number} retries - Number of retry attempts
-     * @returns {Promise<void>}
-     * @throws {Error} If HTTP request fails after all retries
-     */
-    async loadData(retries = 3) {
-        for (let i = 0; i < retries; i++) {
-            try {
-                const response = await fetch('./assets/data/portfolio-data.json');
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                this.data = await response.json();
-                return;
-            } catch (error) {
-                if (i === retries - 1) throw error;
-                // Exponential backoff: 1s, 2s, 3s
-                await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)));
-            }
-        }
-    }
+// Палитра цветов для круговой диаграммы (10 контрастных цветов)
+const CHART_COLORS = [
+    '#D1F767',  // Светло-зеленый (USDT)
+    '#E8A005',   // Оранжевый (Bitcoin)
+    '#FF5343',  // Красный (ETH)
+    '#627EEA',  // Синий (AVAX)
+    '#6c757d',  // Серый (fallback)
+    '#8B5CF6',  // Фиолетовый
+    '#F59E0B',  // Янтарный
+    '#10B981',  // Изумрудный
+    '#EF4444',  // Красный
+    '#3B82F6'   // Синий
+];
 
-    /**
-     * Render wallet selection buttons dynamically using DocumentFragment
-     * Creates buttons for each wallet in the data with performance optimization
-     */
-    renderWalletButtons() {
-        const walletButtonsContainer = document.querySelector('.wallet-selection');
-        if (!walletButtonsContainer) {
-            console.error('Wallet selection container not found');
-            return;
-        }
+// Инициализация портфеля после загрузки DOM
+document.addEventListener('DOMContentLoaded', initPortfolio);
+
+/**
+ * Инициализация менеджера портфеля
+ * Загружает данные, создает кнопки кошельков и устанавливает активный кошелек
+ */
+async function initPortfolio() {
+    try {
+        await loadData();                                                    // Загружаем данные из JSON
+        createWalletButtons();                                               // Создаем кнопки выбора кошельков
+        setActiveWallet(portfolioData.activeWalletId || portfolioData.wallets[0].id);  // Устанавливаем активный кошелек
+    } catch (error) {
+        console.error('Ошибка загрузки данных портфеля:', error);
+    }
+}
+
+/**
+ * Загрузка данных портфеля из JSON файла
+ * Выполняет HTTP запрос к файлу с данными портфеля
+ */
+async function loadData() {
+    const response = await fetch('./assets/data/portfolio-data.json');        // Запрашиваем JSON файл
+    if (!response.ok) {
+        throw new Error(`HTTP ошибка! статус: ${response.status}`);          // Выбрасываем ошибку при неудачном запросе
+    }
+    portfolioData = await response.json();                                  // Парсим JSON и сохраняем в глобальную переменную
+}
+
+
+/**
+ * Создание кнопок выбора кошельков
+ * Динамически создает кнопки для каждого кошелька из данных
+ */
+function createWalletButtons() {
+    const container = document.querySelector(SELECTORS.walletSelection);     // Находим контейнер для кнопок
+    if (!container) return;                                                 // Выходим, если контейнер не найден
+    
+    // Очищаем только если есть существующие кнопки (fallback)
+    const existingButtons = container.querySelectorAll('button');
+    if (existingButtons.length > 0) {
+        container.innerHTML = '';                                            // Очищаем fallback кнопки
+    }
+    
+    // Создаем кнопку для каждого кошелька
+    portfolioData.wallets.forEach(wallet => {
+        const button = document.createElement('button');                    // Создаем элемент кнопки
+        button.className = 'btn btn-outline-dark rounded-pill px-4';        // Устанавливаем CSS классы
+        button.textContent = wallet.name;                                   // Устанавливаем текст кнопки
+        button.setAttribute('data-wallet-id', wallet.id);                   // Сохраняем ID кошелька в атрибуте
+        button.onclick = () => setActiveWallet(wallet.id);                  // Добавляем обработчик клика
+        container.appendChild(button);                                     // Добавляем кнопку в контейнер
+    });
+}
+
+/**
+ * Установка активного кошелька и обновление интерфейса
+ * Находит кошелек по ID, обновляет UI и состояние кнопок
+ */
+function setActiveWallet(walletId) {
+    const wallet = portfolioData.wallets.find(w => w.id === walletId);      // Ищем кошелек по ID
+    if (!wallet) return;                                                    // Выходим, если кошелек не найден
+    
+    activeWalletId = walletId;                                              // Сохраняем ID активного кошелька
+    updateUI(wallet);                                                       // Обновляем все элементы интерфейса
+    updateWalletButtons();                                                  // Обновляем состояние кнопок кошельков
+}
+
+/**
+ * Обновление состояния кнопок кошельков
+ * Изменяет стили кнопок в зависимости от того, какая активна
+ */
+function updateWalletButtons() {
+    const buttons = document.querySelectorAll(`${SELECTORS.walletSelection} button`);  // Находим все кнопки кошельков
+    buttons.forEach(button => {
+        const walletId = parseInt(button.getAttribute('data-wallet-id'));              // Получаем ID кошелька из атрибута
+        const isActive = walletId === activeWalletId;                                 // Проверяем, активен ли этот кошелек
         
-        // Clear existing buttons
-        walletButtonsContainer.innerHTML = '';
+        // Устанавливаем соответствующие CSS классы
+        button.className = isActive 
+            ? 'btn btn-dark rounded-pill px-4'        // Активная кнопка - темная
+            : 'btn btn-outline-dark rounded-pill px-4';  // Неактивная кнопка - с обводкой
+    });
+}
 
-        // Use DocumentFragment for better performance
-        const fragment = document.createDocumentFragment();
+/**
+ * Обновление всех элементов интерфейса данными кошелька
+ * Обновляет капитал, статистику, активы и графики
+ */
+function updateUI(wallet) {
+    // Обновляем значения капитала в разных местах
+    updateElement(SELECTORS.portfolioValue, wallet.capital);               // Основное значение капитала
+    updateElement(SELECTORS.chartValue, wallet.capital);                   // Значение в центре диаграммы
+    updateElement(SELECTORS.portfolioStat, wallet.capital);               // Статистика в карточке
+    
+    // Обновляем статистические показатели
+    updateElement(SELECTORS.winrateStat, wallet.winRate);                  // Винрейт
+    updateElement(SELECTORS.annualReturnStat, wallet.annualReturn);        // Годовая доходность
+    
+    // Обновляем значение годовой доходности
+    updateElement(SELECTORS.yearlyReturn, wallet.yearlyReturn);
+    
+    // Обновляем активы и графики
+    updateAssetsList(wallet.assets);                                       // Список активов
+    updateCircularChart(wallet.assets);                                    // Круговая диаграмма
+    updateChartImages(wallet);                                             // Изображения графиков
+}
+
+/**
+ * Обновление текстового содержимого элемента по селектору
+ * Универсальная функция для обновления любого элемента на странице
+ */
+function updateElement(selector, value) {
+    const element = document.querySelector(selector);                        // Находим элемент по селектору
+    if (element) {
+        element.textContent = value;                                        // Обновляем текстовое содержимое
+    }
+}
+
+
+/**
+ * Обновление списка активов с использованием HTML шаблона
+ * Создает элементы активов из шаблона и заполняет их данными
+ */
+function updateAssetsList(assets) {
+    const container = document.querySelector(SELECTORS.assetsList);          // Контейнер для списка активов
+    const template = document.querySelector(SELECTORS.assetTemplate);       // HTML шаблон элемента актива
+    if (!container || !template) return;                                   // Выходим, если элементы не найдены
+    
+    // Очищаем контейнер от существующих активов
+    container.innerHTML = '';
+    
+    // Создаем новые элементы активов из шаблона
+    assets.forEach(asset => {
+        const clone = template.content.cloneNode(true);                     // Клонируем содержимое шаблона
         
-        // Create button for each wallet
-        this.data.wallets.forEach(wallet => {
-            const button = this.createWalletButton(wallet);
-            fragment.appendChild(button);
-        });
+        // Обновляем источник изображения иконки
+        const img = clone.querySelector('.asset-icon-img');
+        img.src = `./assets/icons/tokenico/${asset.icon}.png`;             // Путь к иконке токена
+        img.alt = asset.name;                                              // Альтернативный текст
         
-        // Append all buttons at once
-        walletButtonsContainer.appendChild(fragment);
-    }
-
-    /**
-     * Create individual wallet button element
-     * @param {Object} wallet - Wallet data object
-     * @returns {HTMLButtonElement} Created button element
-     */
-    createWalletButton(wallet) {
-        const button = document.createElement('button');
-        button.className = 'btn btn-outline-dark rounded-pill px-4';
-        button.textContent = wallet.name;
-        button.setAttribute('data-wallet-id', wallet.id);
-        button.setAttribute('aria-pressed', 'false');
-        button.setAttribute('aria-label', `Выбрать ${wallet.name}`);
+        // Обновляем резервную букву (показывается при ошибке загрузки изображения)
+        const fallback = clone.querySelector('.text-white.small.fw-bold');
+        fallback.textContent = asset.name.charAt(0);                       // Первая буква названия актива
         
-        // Add click event listener
-        button.addEventListener('click', () => this.setActiveWallet(wallet.id));
+        // Обновляем текст с названием и процентом
+        const text = clone.querySelector('.asset-text');
+        text.textContent = `${asset.name} - ${asset.percentage}%`;         // Название и процент актива
         
-        return button;
-    }
+        container.appendChild(clone);                                      // Добавляем элемент в контейнер
+    });
+}
 
-    /**
-     * Set active wallet and update UI
-     * @param {number} walletId - ID of the wallet to activate
-     */
-    setActiveWallet(walletId) {
-        const wallet = this.data.wallets.find(w => w.id === walletId);
-        if (!wallet) return;
 
-        this.activeWalletId = walletId;
-        this.updateWalletButtons(walletId);
-        this.updatePortfolioData(wallet);
-    }
-
-    /**
-     * Update wallet button states (active/inactive)
-     * @param {number} activeId - ID of the currently active wallet
-     */
-    updateWalletButtons(activeId) {
-        const buttons = document.querySelectorAll('.wallet-selection button');
-        buttons.forEach(button => {
-            const walletId = parseInt(button.getAttribute('data-wallet-id'));
-            const isActive = walletId === activeId;
-            
-            // Update button styles based on active state
-            button.className = isActive 
-                ? 'btn btn-dark rounded-pill px-4'
-                : 'btn btn-outline-dark rounded-pill px-4';
-            button.setAttribute('aria-pressed', isActive.toString());
-        });
-    }
-
-    /**
-     * Update all portfolio data for the selected wallet
-     * @param {Object} wallet - Wallet data object
-     */
-    updatePortfolioData(wallet) {
-        // Update capital value in 3 places: header, chart center, portfolio card
-        this.updateElement('.portfolio-value', wallet.capital);
-        this.updateElement('.chart-value', wallet.capital);
-        this.updateElement('[data-stat="portfolio"] .stat-value', wallet.capital);
+/**
+ * Обновление круговой диаграммы
+ * Создает конический градиент на основе процентов активов
+ */
+function updateCircularChart(assets) {
+    const chartSegment = document.querySelector(SELECTORS.chartSegment);    // Сегмент круговой диаграммы
+    if (!chartSegment) return;                                              // Выходим, если элемент не найден
+    
+    let cumulativePercentage = 0;                                            // Накопительный процент для расчета углов
+    const gradientStops = assets.map((asset, index) => {
+        const startAngle = cumulativePercentage * 3.6;                      // Начальный угол (3.6 = 360°/100%)
+        cumulativePercentage += asset.percentage;                            // Добавляем процент актива
+        const endAngle = cumulativePercentage * 3.6;                        // Конечный угол
         
-        // Update statistics
-        this.updateElement('[data-stat="winrate"] .stat-value', wallet.winRate);
-        this.updateElement('[data-stat="annual-return"] .stat-value', wallet.annualReturn);
-        
-        // Update chart subtitle with yearly return percentage
-        this.updateChartSubtitle(wallet.yearlyReturn);
-        
-        // Update assets list and circular chart
-        this.updateAssetsList(wallet.assets);
-        this.updateCircularChart(wallet.assets);
-        
-        // Update chart images
-        this.updateChartImages(wallet);
+        // Выбираем цвет из палитры по индексу или fallback цвет
+        const color = CHART_COLORS[index] || CHART_COLORS[CHART_COLORS.length - 1];
+        return `${color} ${startAngle}deg ${endAngle}deg`;                  // Создаем градиентный сегмент
+    }).join(', ');                                                          // Объединяем все сегменты
+    
+    // Применяем конический градиент к элементу
+    chartSegment.style.background = `conic-gradient(${gradientStops})`;
+}
+
+/**
+ * Обновление изображений графиков
+ * Загружает соответствующие изображения графиков для выбранного кошелька
+ */
+function updateChartImages(wallet) {
+    // Обновляем график изменения портфеля
+    const portfolioChart = document.querySelector(SELECTORS.portfolioChart);
+    if (portfolioChart) {
+        portfolioChart.src = wallet.portfolioChart;                        // Путь к изображению графика портфеля
     }
-
-    /**
-     * Update element text content by selector
-     * @param {string} selector - CSS selector for the element
-     * @param {string} value - New text content
-     */
-    updateElement(selector, value) {
-        const element = document.querySelector(selector);
-        if (element) {
-            element.textContent = value;
-        }
-    }
-
-    /**
-     * Update chart subtitle with yearly return percentage
-     * @param {string} yearlyReturn - Yearly return percentage
-     */
-    updateChartSubtitle(yearlyReturn) {
-        const chartSubtitle = document.querySelector('.chart-subtitle');
-        if (chartSubtitle) {
-            chartSubtitle.innerHTML = `^${yearlyReturn} доходности<br>за последний год`;
-        }
-    }
-
-    /**
-     * Update assets list with new asset data
-     * @param {Array} assets - Array of asset objects
-     */
-    updateAssetsList(assets) {
-        const assetsContainer = document.querySelector('.assets-list');
-        if (!assetsContainer) return;
-
-        // Clear existing assets
-        const existingAssets = assetsContainer.querySelectorAll('.asset-item');
-        existingAssets.forEach(asset => asset.remove());
-
-        // Create new asset items
-        assets.forEach(asset => {
-            const assetItem = document.createElement('div');
-            assetItem.className = 'asset-item d-flex align-items-center justify-content-between mb-2 py-2';
-            
-            const assetIcon = this.getAssetIconClass(asset.name);
-            const iconElement = this.createAssetIcon(asset);
-            
-            // Create asset item HTML with icon and percentage
-            assetItem.innerHTML = `
-                <div class="d-flex align-items-center">
-                    <div class="asset-icon ${assetIcon} rounded-circle d-flex align-items-center justify-content-center me-2">
-                        ${iconElement}
-                    </div>
-                    <span class="text-dark">${asset.name} - ${asset.percentage}%</span>
-                </div>
-            `;
-            
-            assetsContainer.appendChild(assetItem);
-        });
-    }
-
-    /**
-     * Create asset icon element (image or fallback letter)
-     * @param {Object} asset - Asset object with name and icon
-     * @returns {string} HTML string for icon element
-     */
-    createAssetIcon(asset) {
-        // Try to load icon image, fallback to letter if not found
-        const iconPath = `./assets/icons/tokenico/${asset.icon}.png`;
-        
-        // Return image element with error handling
-        return `<img src="${iconPath}" alt="${asset.name}" class="asset-icon-img" style="width: 16px; height: 16px; object-fit: contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
-                <span class="text-white small fw-bold" style="display: none;">${asset.name.charAt(0)}</span>`;
-    }
-
-    /**
-     * Get Bootstrap color class for asset icon
-     * @param {string} assetName - Name of the asset
-     * @returns {string} Bootstrap color class
-     */
-    getAssetIconClass(assetName) {
-        const iconClasses = {
-            'USDT': 'bg-success',    // Green for USDT
-            'Bitcoin': 'bg-warning', // Orange for Bitcoin
-            'ETH': 'bg-primary',     // Blue for Ethereum
-            'AVAX': 'bg-danger'      // Red for Avalanche
-        };
-        return iconClasses[assetName] || 'bg-secondary';
-    }
-
-    /**
-     * Update circular chart with new asset percentages
-     * @param {Array} assets - Array of asset objects with percentages
-     */
-    updateCircularChart(assets) {
-        const chartSegment = document.querySelector('.chart-segment');
-        if (!chartSegment) return;
-
-        // Calculate cumulative percentages for conic-gradient
-        let cumulativePercentage = 0;
-        const gradientStops = assets.map(asset => {
-            const startAngle = cumulativePercentage * 3.6; // Convert percentage to degrees (360° = 100%)
-            cumulativePercentage += asset.percentage;
-            const endAngle = cumulativePercentage * 3.6;
-            
-            const color = this.getAssetColor(asset.name);
-            return `${color} ${startAngle}deg ${endAngle}deg`;
-        }).join(', ');
-
-        // Apply the conic gradient to the chart segment
-        chartSegment.style.background = `conic-gradient(${gradientStops})`;
-    }
-
-    /**
-     * Get hex color for asset in circular chart
-     * @param {string} assetName - Name of the asset
-     * @returns {string} Hex color code
-     */
-    getAssetColor(assetName) {
-        const colors = {
-            'USDT': '#D1F767',    // Green for USDT
-            'Bitcoin': '#E8A005', // Orange for Bitcoin
-            'ETH': '#FF5343',     // Red for Ethereum
-            'AVAX': '#627EEA'     // Blue for Avalanche
-        };
-        return colors[assetName] || '#6c757d'; // Default gray for unknown assets
-    }
-
-    /**
-     * Update chart images with wallet-specific chart URLs
-     * @param {Object} wallet - Wallet data object with chart URLs
-     */
-    updateChartImages(wallet) {
-        // Update portfolio change chart
-        const portfolioChart = document.querySelector('.chart-container img[alt="Portfolio Change Chart"]');
-        if (portfolioChart) {
-            portfolioChart.src = wallet.portfolioChart;
-        }
-
-        // Update Sharpe ratio chart
-        const sharpeChart = document.querySelector('.chart-container img[alt="Sharpe Ratio Chart"]');
-        if (sharpeChart) {
-            sharpeChart.src = wallet.sharpeChart;
-        }
+    
+    // Обновляем график коэффициента Шарпа
+    const sharpeChart = document.querySelector(SELECTORS.sharpeChart);
+    if (sharpeChart) {
+        sharpeChart.src = wallet.sharpeChart;                              // Путь к изображению графика Шарпа
     }
 }
