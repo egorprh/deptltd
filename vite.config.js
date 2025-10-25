@@ -1,51 +1,52 @@
 import { defineConfig } from 'vite';
+import { copyFileSync, readdirSync, mkdirSync, existsSync } from 'fs';
+import { resolve } from 'path';
 
 export default defineConfig({
-  // Корневая папка с исходниками
+  // ... существующие настройки
   root: 'src',
-  
-  // Настройки разработки
-  server: {
-    port: 3000,
-    open: true,
-    host: true,
-    hmr: {
-      port: 3000
-    }
-  },
-  
-  // Настройки сборки
   build: {
     outDir: '../dist',
     assetsDir: 'assets',
-    sourcemap: true,
-    minify: 'esbuild',
-    rollupOptions: {
-      output: {
-        // Разделение на чанки для лучшего кэширования
-        manualChunks: {
-          // vendor: ['bootstrap'] // Bootstrap загружается через CDN
-        },
-        // Оптимизация имен файлов
-        assetFileNames: (assetInfo) => {
-          const info = assetInfo.name.split('.');
-          const ext = info[info.length - 1];
-          if (/\.(png|jpe?g|svg|gif|tiff|bmp|ico)$/i.test(assetInfo.name)) {
-            return `assets/images/[name]-[hash][extname]`;
-          }
-          if (/\.(woff2?|eot|ttf|otf)$/i.test(assetInfo.name)) {
-            return `assets/fonts/[name]-[hash][extname]`;
-          }
-          return `assets/[name]-[hash][extname]`;
-        },
-        chunkFileNames: 'assets/js/[name]-[hash].js',
-        entryFileNames: 'assets/js/[name]-[hash].js'
-      }
-    }
+    // ... остальные настройки
   },
   
-  // Оптимизация зависимостей
-  optimizeDeps: {
-    // include: ['bootstrap'] // Bootstrap загружается через CDN
-  }
+  plugins: [
+    {
+      name: 'copy-static-assets',
+      buildStart() {
+        // Копируем файлы из src/assets в dist/assets
+        const srcAssets = 'public/assets';
+        const distAssets = 'dist/assets';
+        
+        if (existsSync(srcAssets)) {
+          mkdirSync(distAssets, { recursive: true });
+          
+          // Копируем все файлы рекурсивно
+          function copyRecursive(src, dest) {
+            const items = readdirSync(src);
+            
+            items.forEach(item => {
+              const srcPath = resolve(src, item);
+              const destPath = resolve(dest, item);
+              
+              if (existsSync(srcPath)) {
+                const stat = require('fs').statSync(srcPath);
+                
+                if (stat.isDirectory()) {
+                  mkdirSync(destPath, { recursive: true });
+                  copyRecursive(srcPath, destPath);
+                } else {
+                  copyFileSync(srcPath, destPath);
+                }
+              }
+            });
+          }
+          
+          copyRecursive(srcAssets, distAssets);
+          console.log('✅ Static assets copied to dist/');
+        }
+      }
+    }
+  ]
 });
