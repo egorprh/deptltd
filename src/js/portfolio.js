@@ -59,7 +59,7 @@ async function initPortfolio() {
  * Выполняет HTTP запрос к файлу с данными портфеля
  */
 async function loadData() {
-    const response = await fetch('./assets/data/portfolio-data.json');        // Запрашиваем JSON файл
+    const response = await fetch('/data/portfolio-data.json');        // Запрашиваем JSON файл
     if (!response.ok) {
         throw new Error(`HTTP ошибка! статус: ${response.status}`);          // Выбрасываем ошибку при неудачном запросе
     }
