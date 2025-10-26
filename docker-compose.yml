@@ -19,6 +19,8 @@ services:
   php-fpm:
     build: .
     container_name: dept-php-fpm
+    ports:
+      - "9001:9000"
     volumes:
       - ./admin:/var/www/html/admin
       - ./data:/var/www/html/data
