@@ -26,7 +26,7 @@ const SELECTORS = {
 // Палитра цветов для круговой диаграммы (10 контрастных цветов)
 const CHART_COLORS = [
     '#D1F767',  // Светло-зеленый (USDT)
-    '#E8A005',   // Оранжевый (Bitcoin)
+    '#E8A005',   // Оранжевый (BTC)
     '#FF5343',  // Красный (ETH)
     '#627EEA',  // Синий (AVAX)
     '#6c757d',  // Серый (fallback)
@@ -173,9 +173,9 @@ function updateAssetsList(assets) {
     assets.forEach(asset => {
         const clone = template.content.cloneNode(true);                     // Клонируем содержимое шаблона
         
-        // Обновляем источник изображения иконки
+        // Обновляем источник изображения иконки (ищем по названию токена)
         const img = clone.querySelector('.asset-icon-img');
-        img.src = `./assets/icons/tokenico/${asset.icon}.png`;             // Путь к иконке токена
+        img.src = `./assets/icons/tokenico/${asset.name}.png`;             // Путь к иконке токена по названию
         img.alt = asset.name;                                              // Альтернативный текст
         
         // Обновляем резервную букву (показывается при ошибке загрузки изображения)

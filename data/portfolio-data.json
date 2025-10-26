@@ -1,0 +1,85 @@
+{
+    "wallets": [
+        {
+            "id": 1,
+            "name": "КОШЕЛЁК 11212",
+            "capital": "$125",
+            "winRate": "42%",
+            "annualReturn": "38%",
+            "yearlyReturn": "32%",
+            "portfolioChart": "\/uploads\/images\/08fe761f99d702cb.jpeg",
+            "sharpeChart": "",
+            "assets": [
+                {
+                    "name": "USDT",
+                    "percentage": 45
+                },
+                {
+                    "name": "Bitcoin",
+                    "percentage": 25
+                },
+                {
+                    "name": "ETH",
+                    "percentage": 15
+                },
+                {
+                    "name": "AVAX",
+                    "percentage": 15
+                }
+            ]
+        },
+        {
+            "id": 3,
+            "name": "КОШЕЛЁК 3",
+            "capital": "$89,750",
+            "winRate": "52%",
+            "annualReturn": "41%",
+            "yearlyReturn": "18%",
+            "assets": [
+                {
+                    "name": "USDT",
+                    "percentage": 35
+                },
+                {
+                    "name": "BTC",
+                    "percentage": 30
+                },
+                {
+                    "name": "ETH",
+                    "percentage": 25
+                },
+                {
+                    "name": "AVAX",
+                    "percentage": 10
+                }
+            ],
+            "portfolioChart": "assets\/images\/graph.png",
+            "sharpeChart": "assets\/images\/graph.png"
+        },
+        {
+            "id": 4,
+            "name": "NEw",
+            "capital": "1231",
+            "winRate": "44",
+            "annualReturn": "54",
+            "yearlyReturn": "45",
+            "portfolioChart": "\/uploads\/images\/08fe761f99d702cb.jpeg",
+            "sharpeChart": "\/uploads\/images\/08fe761f99d702cb.jpeg",
+            "assets": [
+                {
+                    "name": "USDT",
+                    "percentage": 60
+                },
+                {
+                    "name": "BTC",
+                    "percentage": 20
+                },
+                {
+                    "name": "ETH",
+                    "percentage": 20
+                }
+            ]
+        }
+    ],
+    "activeWalletId": 4
+}

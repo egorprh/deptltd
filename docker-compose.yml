@@ -1,0 +1,29 @@
+services:
+
+  # Закоментировать если nginx настраивается вручную
+  nginx:
+    image: nginx:alpine
+    container_name: dept-nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./dist:/var/www/html
+      - ./admin:/var/www/html/admin
+      - ./data:/var/www/html/data
+      - ./uploads:/var/www/html/uploads
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php-fpm
+    restart: unless-stopped
+
+  php-fpm:
+    build: .
+    container_name: dept-php-fpm
+    volumes:
+      - ./admin:/var/www/html/admin
+      - ./data:/var/www/html/data
+      - ./uploads:/var/www/html/uploads
+    environment:
+      - PHP_FPM_PM=dynamic
+      - PHP_FPM_PM_MAX_CHILDREN=10
+    restart: always
