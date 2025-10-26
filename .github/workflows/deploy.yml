@@ -1,4 +1,4 @@
-name: Deploy Static Site
+name: Deploy to Server
 
 on:
   push:
@@ -12,6 +12,67 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
       
-    - name: Deploy via rsync
+    - name: Create deploy directory
       run: |
-        rsync -avz --delete src/ ${{ secrets.USERNAME }}@${{ secrets.HOST }}:/path/to/your/website/
+        rm -rf deploy
+        mkdir -p deploy
+        
+    - name: Copy files to deploy directory
+      run: |
+        # Create exclude list
+        cat > /tmp/deploy_exclude.txt << EOF
+        .github/
+        node_modules/
+        scripts/
+        uploads/
+        .git/
+        .gitignore
+        nginx.conf
+        deploy/
+        EOF
+        
+        # Copy all files except excluded ones
+        rsync -av --exclude-from=/tmp/deploy_exclude.txt \
+          --exclude='config.php' \
+          . deploy/
+        
+        # Clean up exclude file
+        rm /tmp/deploy_exclude.txt
+        
+        # Show what we're deploying
+        echo "Files to be deployed:"
+        find deploy -type f
+        
+    - name: Create server directory if not exists
+      uses: appleboy/ssh-action@v0.1.5
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.SSH_KEY }}
+        script: |
+          mkdir -p /var/www/dev.dept.ltd
+          
+    - name: Deploy to server
+      uses: appleboy/scp-action@v0.1.4
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.SSH_KEY }}
+        source: "deploy/*"
+        target: "/var/www/dev.dept.ltd/"
+        strip_components: 1
+          
+    - name: Rebuild and restart Docker containers
+      uses: appleboy/ssh-action@v0.1.5
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.SSH_KEY }}
+        script: |
+          cd /var/www/dev.dept.ltd
+          docker compose down
+          docker compose up --build -d
+          
+    - name: Cleanup deploy directory
+      run: |
+        rm -rf deploy
