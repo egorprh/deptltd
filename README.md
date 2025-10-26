@@ -368,9 +368,86 @@ sudo cp dev.dept.ltd.conf /etc/nginx/sites-available/
 # Создать символическую ссылку
 sudo ln -s /etc/nginx/sites-available/dev.dept.ltd.conf /etc/nginx/sites-enabled/
 
+# Создать SSL сертификат с Let's Encrypt
+sudo certbot --nginx -d dev.dept.ltd (модифицирует существующи nginx конфигурацию добавив в нее прослушивание порта 443)
+
 # Проверить конфигурацию
 sudo nginx -t
 
 # Перезагрузить nginx
 sudo systemctl reload nginx
+```
+
+#### Для продакшена (dept.ltd) с SSL
+
+```bash
+# Скопировать конфигурацию
+sudo cp dept.ltd.conf /etc/nginx/sites-available/
+
+# Создать символическую ссылку
+sudo ln -s /etc/nginx/sites-available/dept.ltd.conf /etc/nginx/sites-enabled/
+
+# Создать SSL сертификат с Let's Encrypt
+sudo certbot --nginx -d dept.ltd -d www.dept.ltd
+
+# Проверить конфигурацию
+sudo nginx -t
+
+# Перезагрузить nginx
+sudo systemctl reload nginx
+```
+
+**Примечание:** Certbot автоматически обновит конфигурацию nginx с правильными путями к сертификатам.
+
+### Выпуск SSL сертификата
+
+#### Установка Certbot
+
+```bash
+# Ubuntu/Debian
+sudo apt update
+sudo apt install certbot python3-certbot-nginx
+
+# CentOS/RHEL
+sudo yum install certbot python3-certbot-nginx
+```
+
+#### Создание сертификата
+
+```bash
+# Для домена dept.ltd
+sudo certbot --nginx -d dept.ltd -d www.dept.ltd
+
+# Следуйте инструкциям:
+# 1. Введите email для уведомлений
+# 2. Согласитесь с условиями (A)
+# 3. Выберите редирект HTTP->HTTPS (2)
+```
+
+#### Проверка и обновление
+
+```bash
+# Проверка статуса сертификатов
+sudo certbot certificates
+
+# Тестовое обновление
+sudo certbot renew --dry-run
+
+# Автоматическое обновление (добавить в cron)
+sudo crontab -e
+# Добавить строку:
+# 0 12 * * * /usr/bin/certbot renew --quiet
+```
+
+#### Полезные команды
+
+```bash
+# Просмотр конфигурации nginx после certbot
+sudo nginx -t
+
+# Перезагрузка nginx
+sudo systemctl reload nginx
+
+# Проверка SSL сертификата
+openssl s_client -connect dept.ltd:443 -servername dept.ltd
 ```

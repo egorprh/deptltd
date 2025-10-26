@@ -18,6 +18,9 @@ RUN echo "upload_max_filesize = 10M" >> /usr/local/etc/php/conf.d/uploads.ini \
 # Копирование файлов проекта
 COPY . /var/www/html
 
+# Создание папки uploads если её нет
+RUN mkdir -p /var/www/html/uploads
+
 # Настройка прав доступа
 RUN chown -R www-data:www-data /var/www/html/data /var/www/html/uploads \
     && chmod -R 755 /var/www/html/data /var/www/html/uploads
