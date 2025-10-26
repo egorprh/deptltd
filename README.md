@@ -296,19 +296,22 @@ sudo tail -f /var/log/nginx/error.log
 
 - **`HOST`** - IP адрес или домен вашего сервера
 - **`USERNAME`** - имя пользователя для SSH подключения  
-- **`SSH_KEY`** - приватный SSH ключ для аутентификации
+- **`PASSWORD`** - пароль для SSH подключения
 
-#### Создание SSH ключей
+#### Настройка SSH на сервере
+
+Убедитесь, что на сервере включена аутентификация по паролю:
 
 ```bash
-# Создание SSH ключа
-ssh-keygen -t rsa -b 4096 -C "your-email@example.com"
+# На сервере отредактируйте SSH конфигурацию
+sudo nano /etc/ssh/sshd_config
 
-# Копирование публичного ключа на сервер
-ssh-copy-id username@your-server-ip
+# Убедитесь, что включены:
+PasswordAuthentication yes
+PubkeyAuthentication yes
 
-# Получение приватного ключа для GitHub Secrets
-cat ~/.ssh/id_rsa
+# Перезапустите SSH сервис
+sudo systemctl restart ssh
 ```
 
 #### Настройка сервера
