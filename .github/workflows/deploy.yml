@@ -29,6 +29,8 @@ jobs:
         .gitignore
         nginx.conf
         deploy/
+        Dockerfile
+        docker-compose.yml
         EOF
         
         # Copy all files except excluded ones
@@ -61,17 +63,6 @@ jobs:
         source: "deploy/*"
         target: "/var/www/dev.dept.ltd/"
         strip_components: 1
-          
-    - name: Rebuild and restart Docker containers
-      uses: appleboy/ssh-action@v0.1.5
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        password: ${{ secrets.PASSWORD }}
-        script: |
-          cd /var/www/dev.dept.ltd
-          docker compose down
-          docker compose up --build -d
           
     - name: Cleanup deploy directory
       run: |
