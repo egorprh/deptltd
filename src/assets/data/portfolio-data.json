@@ -10,22 +10,18 @@
       "assets": [
         {
           "name": "USDT",
-          "icon": "USDT",
           "percentage": 45
         },
         {
-          "name": "Bitcoin",
-          "icon": "BTC",
+          "name": "BTC",
           "percentage": 25
         },
         {
           "name": "ETH",
-          "icon": "ETH",
           "percentage": 20
         },
         {
           "name": "AVAX",
-          "icon": "AVAX",
           "percentage": 10
         }
       ],
@@ -41,23 +37,19 @@
       "yearlyReturn": "24%",
       "assets": [
         {
-          "name": "USDT",
-          "icon": "USDT",
+          "name": "BTC",
           "percentage": 60
         },
         {
-          "name": "Bitcoin",
-          "icon": "BTC",
+          "name": "ETH",
           "percentage": 10
         },
         {
           "name": "ETH",
-          "icon": "ETH",
           "percentage": 20
         },
         {
           "name": "AVAX",
-          "icon": "AVAX",
           "percentage": 13
         }
       ],
@@ -74,22 +66,18 @@
       "assets": [
         {
           "name": "USDT",
-          "icon": "USDT",
           "percentage": 35
         },
         {
-          "name": "Bitcoin",
-          "icon": "BTC",
+          "name": "BTC",
           "percentage": 30
         },
         {
           "name": "ETH",
-          "icon": "ETH",
           "percentage": 25
         },
         {
           "name": "AVAX",
-          "icon": "AVAX",
           "percentage": 10
         }
       ],

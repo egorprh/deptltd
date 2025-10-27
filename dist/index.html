@@ -7,7 +7,7 @@
     <title>Department - Алгоритмическая торговля</title>
     
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="/assets/images/favicon-Dh6d5K_x.ico">
+    <link rel="icon" type="image/x-icon" href="/assets/favicon-Dh6d5K_x.ico">
     
     
     <!-- SEO Meta Tags -->
@@ -26,8 +26,7 @@
     <!-- Custom CSS -->
 
     <!-- Local Fonts - loaded via CSS @font-face -->
-  <script type="module" crossorigin src="/assets/js/index-Bb0sHIBc.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-DZr444hQ.css">
+  <link rel="stylesheet" crossorigin href="/assets/index-DAyed4bA.css">
 </head>
 
 <body>
@@ -210,7 +209,7 @@
                                     <h5 class="text-dark mb-0">Капитал во владении:</h5>
                                 </div>
                                 <div class="col-6 text-end">
-                                    <h2 class="portfolio-value text-dark mb-0">$337,211</h2>
+                                    <h2 id="portfolio-value" class="portfolio-value text-dark mb-0">$337,211</h2>
                                 </div>
                             </div>
                             
@@ -219,8 +218,10 @@
                                 <div class="col-12">
                                     <div class="d-flex align-items-center justify-content-end">
                                         <h6 class="text-dark mb-0 me-3">ВЫБОР КОШЕЛЬКА:</h6>
-                                        <div class="wallet-selection d-flex gap-3" role="group" aria-label="Выбор кошелька">
-                                            <!-- Wallet buttons will be dynamically generated -->
+                                        <div id="wallet-selection" class="d-flex gap-3" role="group" aria-label="Выбор кошелька">
+                                            <!-- Fallback buttons when JS is disabled -->
+                                            <button class="btn btn-dark rounded-pill px-4" data-wallet-id="1">КОШЕЛЁК 1</button>
+                                            <button class="btn btn-outline-dark rounded-pill px-4" data-wallet-id="2" disabled>КОШЕЛЁК 2</button>
                                         </div>
                                     </div>
                                 </div>
@@ -244,7 +245,7 @@
                                         </div>
                                     </div>
                                     <div class="stat-content p-4 text-center bg-white" data-stat="winrate">
-                                        <h3 class="stat-value text-dark mb-0">46%</h3>
+                                        <h3 id="winrate-value" class="stat-value text-dark mb-0">46%</h3>
                                     </div>
                                 </div>
                             </div>
@@ -261,7 +262,7 @@
                                         </div>
                                     </div>
                                     <div class="stat-content p-4 text-center bg-white" data-stat="portfolio">
-                                        <h3 class="stat-value text-dark mb-0">$337,211</h3>
+                                        <h3 id="portfolio-stat-value" class="stat-value text-dark mb-0">$337,211</h3>
                                     </div>
                                 </div>
                             </div>
@@ -281,7 +282,7 @@
                                         </div>
                                     </div>
                                     <div class="stat-content p-4 text-center bg-white" data-stat="annual-return">
-                                        <h3 class="stat-value text-dark mb-0">46%</h3>
+                                        <h3 id="annual-return-value" class="stat-value text-dark mb-0">46%</h3>
                                     </div>
                                 </div>
                             </div>
@@ -306,13 +307,13 @@
                                                 <div
                                                     class="circular-chart position-relative border border-light bg-white">
                                                     <!-- USDT 60% - Green -->
-                                                    <div class="chart-segment"></div>
+                                                    <div id="chart-segment" class="chart-segment"></div>
                                                     <!-- Center Content -->
                                                     <div
                                                         class="chart-center position-absolute top-50 start-50 translate-middle text-center bg-white d-flex flex-column justify-content-center align-items-center shadow-sm">
-                                                        <div class="chart-value text-dark fw-bold">$337,211</div>
-                                                        <div class="chart-subtitle text-dark small">^24%
-                                                            доходности<br>за последний год</div>
+                                                        <div id="chart-value" class="chart-value text-dark fw-bold">$337,211</div>
+                                                        <div class="chart-subtitle text-dark small">^<span id="yearly-return-value">24%</span>
+                                                            доходности за последний год</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -325,7 +326,7 @@
                                     class="chart-section bg-white border border-dark border-opacity-10 rounded-3 p-4 h-100">
                                     <h5 class="stat-label text-dark mb-3">Изменение портфолио</h5>
                                     <div class="chart-container bg-white border border-light p-3 text-center">
-                                        <img src="/assets/images/graph-B1008laA.png" alt="Portfolio Change Chart" class="img-fluid">
+                                        <img id="portfolio-chart" src="/assets/graph-B1008laA.png" alt="Portfolio Change Chart" class="img-fluid">
                                     </div>
                                 </div>
                             </div>
@@ -344,48 +345,53 @@
                                         </div>
                                     </div>
                                     <div class="stat-content p-4">
-                                        <div class="assets-list bg-white border border-light p-3">
-                                            <div
-                                                class="asset-item d-flex align-items-center justify-content-between mb-2 py-2">
+                                        <div id="assets-list" class="bg-white border border-light p-3">
+                                            <div class="asset-item d-flex align-items-center justify-content-between mb-2 py-2">
                                                 <div class="d-flex align-items-center">
-                                                    <div
-                                                        class="asset-icon bg-success rounded-circle d-flex align-items-center justify-content-center me-2">
-                                                        <span class="text-white small fw-bold">T</span>
+                                                    <div class="asset-icon rounded-circle d-flex align-items-center justify-content-center me-2">
+                                                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAiCAYAAAA6RwvCAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAMkSURBVHgBxZfNTxNBGMafma4BhBLwghES68eJA7IHE09aDkRvavRiwkf9D+pBr9B4MzHCzZN8mehBI95UDjTxgMaYBWKIF2RN4AAHIZTy2c4475SPlrbb7VLoL9nuzu7b3WefmXf2HYYisGKhIHziCiCDAGuFRB2Y2lLY6rwthJzi0hg1/YNRFAFzE2StdYbA0a3Cg3CPDSmj2PZFzPpBu1Cwo5BdBwbUYQDeWVFP6TOrhiPwIsRa736hrA6jdExii9/N505OIVa8ewBMhlB6bCWmLZcYdoIiHMXw9Ia10dVzzCKIACrEuLUcqsspRA9MiV6cDEpMsge5hOxmxwnCwlasI7jXMuhHzxMFUvTWhc8oloamKgx9vZ4/wMfIlSgdphzhrAdlgQX3XOHWWqgVR5uwjoTgPEh7QyAZ5C5m+mdvrma0/8zE8PLpb8eY6tpTKITqkttq12twjhtwQcu1MyWJyYKhlVLZgGQBN5++2ZlVxFcTWJzf0INwYmwpK2bs3QJqlAvVtToHdBxtBalGwCBFTjETX5b0jS81+7Os/vDqb0a7/X5jRptEz6oujK/uOLrlk+I8hwM0DsbeL+i3ctPfh6H/kYjnj3/pfT62d2Q9s9a7pNPNyG7aFhc29Y21M35DH9MbH34wnVuc30Q8tqPdaGisREf4srMjPtwhIXNwkb70RnTjPaunvy9j+tu/jJj2e+f2x8XF5lqcbap052RStCkhneNFVl4aEvHkwY+Mc5/mbsITW7yeC8GmUF5sVRKscC7FKMoJY1HacSSMSfX5X0GZ8HGpjeBkiwD6UR7slorhj1qI/tnmfWVxhR0UYnouJld+xrv6lSrX5QClKKXrEbDVEmPoQFMaXlO5aMh9zk2z6qCAzpzime8h9NLxmGEyki4iS4i+yHjbsYqRiJinR/oOn869wNoIBSCF6qYSVm7UHVI+MmtGBnNdzvn11c5scVOIUqW1WozTmMgjgihYEqXcSQ54HMQ2pWh6dngWki5ISBHmUpWWTsWUzgg1WybkkOl/HYVLXAvJECXVcnEtkRLDWCAlQNowEmpueGvDA/8Bs0A8SOKy7v4AAAAASUVORK5CYII=" alt="USDT" class="asset-icon-img">
                                                     </div>
                                                     <span class="text-dark">USDT - 60%</span>
                                                 </div>
                                             </div>
-                                            <div
-                                                class="asset-item d-flex align-items-center justify-content-between mb-2 py-2">
+                                            <div class="asset-item d-flex align-items-center justify-content-between mb-2 py-2">
                                                 <div class="d-flex align-items-center">
-                                                    <div
-                                                        class="asset-icon bg-warning rounded-circle d-flex align-items-center justify-content-center me-2">
-                                                        <span class="text-white small fw-bold">B</span>
+                                                    <div class="asset-icon rounded-circle d-flex align-items-center justify-content-center me-2">
+                                                        <img src="/assets/BTC-DCm9O6Ls.png" alt="Bitcoin" class="asset-icon-img">
                                                     </div>
-                                                    <span class="text-dark">Bitcoin - 10%</span>
+                                                    <span class="text-dark">BTC - 10%</span>
                                                 </div>
                                             </div>
-                                            <div
-                                                class="asset-item d-flex align-items-center justify-content-between mb-2 py-2">
+                                            <div class="asset-item d-flex align-items-center justify-content-between mb-2 py-2">
                                                 <div class="d-flex align-items-center">
-                                                    <div
-                                                        class="asset-icon bg-primary rounded-circle d-flex align-items-center justify-content-center me-2">
-                                                        <span class="text-white small fw-bold">E</span>
+                                                    <div class="asset-icon rounded-circle d-flex align-items-center justify-content-center me-2">
+                                                        <img src="/assets/ETH-DDXVG8DW.png" alt="ETH" class="asset-icon-img">
                                                     </div>
                                                     <span class="text-dark">ETH - 20%</span>
                                                 </div>
                                             </div>
-                                            <div
-                                                class="asset-item d-flex align-items-center justify-content-between mb-2 py-2">
+                                            <div class="asset-item d-flex align-items-center justify-content-between mb-2 py-2">
                                                 <div class="d-flex align-items-center">
-                                                    <div
-                                                        class="asset-icon bg-danger rounded-circle d-flex align-items-center justify-content-center me-2">
-                                                        <span class="text-white small fw-bold">A</span>
+                                                    <div class="asset-icon rounded-circle d-flex align-items-center justify-content-center me-2">
+                                                        <img src="/assets/AVAX-Be8n5HLo.png" alt="AVAX" class="asset-icon-img">
                                                     </div>
                                                     <span class="text-dark">AVAX - 13%</span>
                                                 </div>
                                             </div>
                                         </div>
+                                        
+                                        <!-- Template for asset items (hidden) -->
+                                        <template id="asset-template">
+                                            <div class="asset-item d-flex align-items-center justify-content-between mb-2 py-2">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="asset-icon rounded-circle d-flex align-items-center justify-content-center me-2">
+                                                        <img class="asset-icon-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                                                        <span class="text-white small fw-bold" style="display: none;"></span>
+                                                    </div>
+                                                    <span class="text-dark asset-text"></span>
+                                                </div>
+                                            </div>
+                                        </template>
                                     </div>
                                 </div>
                             </div>
@@ -394,7 +400,7 @@
                                     class="chart-section bg-white border border-dark border-opacity-10 rounded-3 p-4 h-100">
                                     <h5 class="stat-label text-dark mb-3">Коэффициент Шарпа</h5>
                                     <div class="chart-container bg-white border border-light p-3 text-center">
-                                        <img src="/assets/images/graph-B1008laA.png" alt="Sharpe Ratio Chart" class="img-fluid">
+                                        <img id="sharpe-chart" src="/assets/graph-B1008laA.png" alt="Sharpe Ratio Chart" class="img-fluid">
                                     </div>
                                 </div>
                             </div>
@@ -483,7 +489,7 @@
                         <div class="row align-items-center">
                             <div class="col-auto">
                                 <div class="team-image">
-                                    <img src="/assets/images/team-egor-4bd322-DpLJEyKS.png" alt="Ростислав"
+                                    <img src="/assets/team-egor-4bd322-DpLJEyKS.png" alt="Ростислав"
                                         class="img-fluid rounded-3">
                                 </div>
                             </div>
@@ -512,7 +518,7 @@
                         <div class="row align-items-center">
                             <div class="col-auto">
                                 <div class="team-image">
-                                    <img src="/assets/images/team-egor-4bd322-DpLJEyKS.png" alt="Кирилл" class="img-fluid rounded-3">
+                                    <img src="/assets/team-egor-4bd322-DpLJEyKS.png" alt="Кирилл" class="img-fluid rounded-3">
                                 </div>
                             </div>
                             <div class="col">
@@ -538,7 +544,7 @@
                         <div class="row align-items-center">
                             <div class="col-auto">
                                 <div class="team-image">
-                                    <img src="/assets/images/team-egor-4bd322-DpLJEyKS.png" alt="Егор" class="img-fluid rounded-3">
+                                    <img src="/assets/team-egor-4bd322-DpLJEyKS.png" alt="Егор" class="img-fluid rounded-3">
                                 </div>
                             </div>
                             <div class="col">
@@ -633,7 +639,7 @@
 
     <!-- Footer -->
     <footer class="bg-dark text-white">
-        <div class="container scroll-hidden">
+        <div class="container">
             <div class="row">
                 <div class="col-12">
                     <div class="footer-content py-5">
@@ -643,8 +649,8 @@
                             </div>
                             <div class="col-auto">
                                 <div class="footer-partners d-flex gap-4">
-                                    <img src="/assets/images/footer-skolkovo-71c150-DUUbKKz5.png" alt="Skolkovo" class="img-fluid">
-                                    <img src="/assets/images/footer-fasie-CLJaCxk1.png" alt="FASIE" class="img-fluid">
+                                    <img src="/assets/footer-skolkovo-71c150-DUUbKKz5.png" alt="Skolkovo" class="img-fluid">
+                                    <img src="/assets/footer-fasie-CLJaCxk1.png" alt="FASIE" class="img-fluid">
                                 </div>
                             </div>
                         </div>
@@ -658,6 +664,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <!-- Main Application Scripts -->
+    <script src="./js/portfolio.js"></script>
+    <script src="./js/scroll.js"></script>
 </body>
 
 </html>

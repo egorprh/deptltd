@@ -1,0 +1,69 @@
+name: Deploy to Server
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Create deploy directory
+      run: |
+        rm -rf deploy
+        mkdir -p deploy
+        
+    - name: Copy files to deploy directory
+      run: |
+        # Create exclude list
+        cat > /tmp/deploy_exclude.txt << EOF
+        .github/
+        node_modules/
+        scripts/
+        uploads/
+        .git/
+        .gitignore
+        nginx.conf
+        deploy/
+        Dockerfile
+        docker-compose.yml
+        EOF
+        
+        # Copy all files except excluded ones
+        rsync -av --exclude-from=/tmp/deploy_exclude.txt \
+          --exclude='config.php' \
+          . deploy/
+        
+        # Clean up exclude file
+        rm /tmp/deploy_exclude.txt
+        
+        # Show what we're deploying
+        echo "Files to be deployed:"
+        find deploy -type f
+        
+    - name: Create server directory if not exists
+      uses: appleboy/ssh-action@v0.1.5
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        script: |
+          mkdir -p /var/www/dev.dept.ltd
+          
+    - name: Deploy to server
+      uses: appleboy/scp-action@v0.1.4
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        source: "deploy/*"
+        target: "/var/www/dev.dept.ltd/"
+        strip_components: 1
+          
+    - name: Cleanup deploy directory
+      run: |
+        rm -rf deploy
