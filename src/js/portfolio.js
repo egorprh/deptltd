@@ -116,9 +116,9 @@ function updateWalletButtons() {
         const isActive = walletId === activeWalletId;                                 // Проверяем, активен ли этот кошелек
         
         // Устанавливаем соответствующие CSS классы
-        button.className = isActive 
-            ? 'btn btn-dark rounded-pill px-4'        // Активная кнопка - темная
-            : 'btn btn-outline-dark rounded-pill px-4';  // Неактивная кнопка - с обводкой
+        button.className = isActive
+            ? 'btn btn-dark rounded-pill px-2 py-1 lh-1'        // Активная кнопка - темная
+            : 'btn btn-outline-dark rounded-pill px-2 py-1 lh-1';  // Неактивная кнопка - с обводкой
     });
 }
 
