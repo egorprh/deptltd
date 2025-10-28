@@ -59,7 +59,7 @@ async function initPortfolio() {
  * Выполняет HTTP запрос к файлу с данными портфеля
  */
 async function loadData() {
-    const response = await fetch('/data/portfolio-data.json');        // Запрашиваем JSON файл
+    const response = await fetch('../assets/data/portfolio-data.json');        // Запрашиваем JSON файл
     if (!response.ok) {
         throw new Error(`HTTP ошибка! статус: ${response.status}`);          // Выбрасываем ошибку при неудачном запросе
     }
@@ -114,11 +114,11 @@ function updateWalletButtons() {
     buttons.forEach(button => {
         const walletId = parseInt(button.getAttribute('data-wallet-id'));              // Получаем ID кошелька из атрибута
         const isActive = walletId === activeWalletId;                                 // Проверяем, активен ли этот кошелек
-        
+
         // Устанавливаем соответствующие CSS классы
         button.className = isActive
-            ? 'btn btn-dark rounded-pill px-2 py-1 lh-1'        // Активная кнопка - темная
-            : 'btn btn-outline-dark rounded-pill px-2 py-1 lh-1';  // Неактивная кнопка - с обводкой
+            ? 'btn btn-dark rounded-pill px-3 py-2 lh-1'        // Активная кнопка - темная
+            : 'btn btn-outline-dark rounded-pill px-3 py-2 lh-1';  // Неактивная кнопка - с обводкой
     });
 }
 
@@ -161,34 +161,54 @@ function updateElement(selector, value) {
  * Обновление списка активов с использованием HTML шаблона
  * Создает элементы активов из шаблона и заполняет их данными
  */
+/**
+ * Обновление списка активов с использованием HTML шаблона
+ * Создает элементы активов из шаблона и заполняет их данными
+ */
 function updateAssetsList(assets) {
     const container = document.querySelector(SELECTORS.assetsList);          // Контейнер для списка активов
     const template = document.querySelector(SELECTORS.assetTemplate);       // HTML шаблон элемента актива
     if (!container || !template) return;                                   // Выходим, если элементы не найдены
-    
+
     // Очищаем контейнер от существующих активов
     container.innerHTML = '';
-    
+
     // Создаем новые элементы активов из шаблона
-    assets.forEach(asset => {
+    assets.forEach((asset, index) => {
         const clone = template.content.cloneNode(true);                     // Клонируем содержимое шаблона
-        
+
+        // Определяем цвет для текущего актива
+        const color = CHART_COLORS[index] || CHART_COLORS[CHART_COLORS.length - 1];
+
+        // Применяем цвет границы к корневому элементу актива
+        const assetItem = clone.querySelector('.asset-item');
+        if (assetItem) {
+            assetItem.style.border = `1px solid ${color}`;
+            assetItem.style.borderRadius = '48px';
+        }
+
+        const assetIcon = clone.querySelector('.asset-icon');
+        if (assetItem) {
+            assetIcon.style.backgroundColor = `${color}`;
+        }
+
         // Обновляем источник изображения иконки (ищем по названию токена)
         const img = clone.querySelector('.asset-icon-img');
         img.src = `./assets/icons/tokenico/${asset.name}.png`;             // Путь к иконке токена по названию
         img.alt = asset.name;                                              // Альтернативный текст
-        
+
         // Обновляем резервную букву (показывается при ошибке загрузки изображения)
         const fallback = clone.querySelector('.text-white.small.fw-bold');
         fallback.textContent = asset.name.charAt(0);                       // Первая буква названия актива
-        
+
         // Обновляем текст с названием и процентом
         const text = clone.querySelector('.asset-text');
         text.textContent = `${asset.name} - ${asset.percentage}%`;         // Название и процент актива
-        
+
         container.appendChild(clone);                                      // Добавляем элемент в контейнер
     });
 }
+
 
 
 /**
@@ -198,18 +218,18 @@ function updateAssetsList(assets) {
 function updateCircularChart(assets) {
     const chartSegment = document.querySelector(SELECTORS.chartSegment);    // Сегмент круговой диаграммы
     if (!chartSegment) return;                                              // Выходим, если элемент не найден
-    
+
     let cumulativePercentage = 0;                                            // Накопительный процент для расчета углов
     const gradientStops = assets.map((asset, index) => {
         const startAngle = cumulativePercentage * 3.6;                      // Начальный угол (3.6 = 360°/100%)
         cumulativePercentage += asset.percentage;                            // Добавляем процент актива
         const endAngle = cumulativePercentage * 3.6;                        // Конечный угол
-        
+
         // Выбираем цвет из палитры по индексу или fallback цвет
         const color = CHART_COLORS[index] || CHART_COLORS[CHART_COLORS.length - 1];
         return `${color} ${startAngle}deg ${endAngle}deg`;                  // Создаем градиентный сегмент
     }).join(', ');                                                          // Объединяем все сегменты
-    
+
     // Применяем конический градиент к элементу
     chartSegment.style.background = `conic-gradient(${gradientStops})`;
 }

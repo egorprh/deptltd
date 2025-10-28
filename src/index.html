@@ -32,36 +32,39 @@
 <body>
     
     <!-- Header -->
-    <header class="bg-white border-bottom" role="banner">
-        <div class="container">
+    <header class="bg-white" role="banner">
+        <div class="navbar-container">
             <nav class="navbar navbar-expand-lg py-2" role="navigation" aria-label="Основная навигация">
-                <a class="navbar-brand py-0 fs-3 fw-semibold lh-1 text-dark" href="#"
-                    aria-label="Department - главная страница">department.</a>
+                <div class="navbar-mobile d-flex justify-content-between align-items-center">
+                    <a class="navbar-brand py-0 fw-semibold lh-1 text-dark" href="#"
+                       aria-label="Department - главная страница">department.</a>
 
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Переключить навигацию">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+                    <a class="navbar-toggler border-0 align-items-center collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                       aria-controls="navbarNav" aria-expanded="false" aria-label="Переключить навигацию">
+                        <img class="icon-menu" src="assets/icons/icon-menu.svg" alt="Menu">
+                        <img class="icon-cancel" src="assets/icons/icon-cancel.svg" alt="Menu">
+                    </a>
+                </div>
 
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav mx-auto" role="menubar">
                         <li class="nav-item" role="none">
-                            <a class="nav-link text-dark text-uppercase  lh-1" href="#about" role="menuitem">О нас</a>
+                            <a class="nav-link text-dark lh-1" href="#about" role="menuitem">О нас</a>
                         </li>
                         <li class="nav-item" role="none">
-                            <a class="nav-link text-dark text-uppercase small lh-1" href="#investment"
+                            <a class="nav-link text-dark lh-1" href="#investment"
                                 role="menuitem">Инвестиции</a>
                         </li>
                         <li class="nav-item" role="none">
-                            <a class="nav-link text-dark text-uppercase small lh-1" href="#team" role="menuitem">Команда</a>
+                            <a class="nav-link text-dark lh-1" href="#team" role="menuitem">Команда</a>
                         </li>
                     </ul>
 
                     <div class="d-flex social-links" role="complementary" aria-label="Социальные сети">
-                        <a href="#" class="social-link bg-dark px-1 rounded-3">
+                        <a href="#" class="social-link bg-dark">
                             <img src="assets/icons/tokenico/youtube.svg" alt="Youtube">
                         </a>
-                        <a href="#" class="social-link bg-dark px-1 rounded-3">
+                        <a href="#" class="social-link bg-dark">
                             <img src="assets/icons/tg.svg" alt="Telegram">
                         </a>
                     </div>
@@ -71,15 +74,15 @@
     </header>
 
     <!-- Hero Section -->
-    <main id="main-content" class="hero-section bg-white text-dark d-flex flex-column">
-        <div class="hero-content">
+    <main id="main-content" class="hero-section bg-white text-dark d-flex flex-column position-relative">
+        <div class="hero-content gap-5">
             <div class="hero-title-wrapper d-flex align-items-center justify-content-center">
-                <h1 class="hero-title mx-auto">
+                <h1 class="hero-title mx-auto mb-0">
                     Эффективность и надёжность алгоритмической торговли
                 </h1>
             </div>
 
-            <div class="hero-footer container d-flex flex-column flex-md-row align-items-center">
+            <div class="hero-footer container-custom d-flex flex-column flex-md-row align-items-center">
                 <a href="#about" class="hero-btn btn btn-dark btn-lg d-flex text-uppercase fw-medium fs-6 text-uppercase text-nowrap lh-lg"
                    aria-label="Узнать подробнее о нашей технологии">
                     Узнать подробнее
@@ -96,7 +99,7 @@
     <!-- Technology Section -->
     <section id="about" class="bg-dark text-white scroll-hidden">
         <div class="section-header py-4 border-bottom border-color-white-30">
-            <div class="container">
+            <div class="container-custom">
                 <div class="section-header-content d-flex align-items-end">
                     <h2 class="section-title mb-0">Наша технология</h2>
                     <span class="section-subtitle color-white-30 text-uppercase mb-2 lh-1">ПРОГРАММНОЕ
@@ -105,7 +108,7 @@
             </div>
         </div>
 
-        <div class="container tech-container">
+        <div class="container-custom tech-container">
             <h2 class="tech-h2-title text-center lh-1">Как мы используем алгоритмы на финансовых рынках</h2>
 
             <div class="tech-cards row">
@@ -113,10 +116,10 @@
                 <div class="col-lg-4 mb-0 px-3">
                     <div class="d-flex flex-column gap-4 justify-content-between tech-card bg-darker border border-white border-opacity-10 h-100">
                         <div>
-                            <div class="tech-image mb-4">
+                            <div class="tech-image mb-5 mb-md-4">
                                 <img src="./assets/images/tech-pattern.svg" alt="Pattern Analysis" class="img-fluid w-100">
                             </div>
-                            <h4 class="tech-title mb-3">Анализ рыночных паттернов</h4>
+                            <h4 class="tech-title mb-4 mb-md-3">Анализ рыночных паттернов</h4>
                             <p class="tech-description mb-0">
                                 Наши алгоритмы распознают рыночные структуры и разворотные паттерны на графиках,
                                 используя методы машинного обучения и временных рядов.
@@ -172,202 +175,207 @@
         </div>
     </section>
 
-    <!-- Portfolio Section -->
-    <div class="container portfolio-section bg-white scroll-hidden">
-        <!-- Top Section: Header + Capital + Wallet Selection -->
-        <div class="portfolio-header border-bottom">
-            <div class="d-flex align-items-center">
-                <h2 class="section-title text-dark mb-0 mr-3">Информация о портфеле</h2>
+    <div class="container-custom">
+        <div class="portfolio-section bg-white scroll-hidden">
+            <!-- Top Section: Header + Capital + Wallet Selection -->
+            <div class="portfolio-header border-bottom">
+                <div class="d-flex align-items-center">
+                    <h2 class="section-title text-dark mb-0 mr-3">Информация о портфеле</h2>
+                </div>
+                <div class="section-divider-container"></div>
             </div>
-            <div class="section-divider-container"></div>
-        </div>
 
-        <div class="portfolio-content">
-            <div class="align-items-center mb-4 d-flex justify-content-end gap-3">
-                    <h5 class="text-dark mb-0 fs-2 fw-medium lh-1">Капитал <br> во владении:</h5>
+            <div class="portfolio-content">
+                <div class="align-items-end align-items-md-center mb-3 d-flex flex-column flex-md-row justify-content-end gap-3">
+                    <h5 class="portfolio-value-title text-dark mb-0 fw-medium lh-1">Капитал <br> во владении:</h5>
                     <h2 id="portfolio-value" class="portfolio-value text-dark mb-0 lh-1">$337,211</h2>
-            </div>
-
-            <!-- Second Row: Wallet Selection -->
-            <div class="wallet d-flex align-items-center justify-content-end">
-                <h6 class="text-dark mb-0 me-3">ВЫБОР КОШЕЛЬКА:</h6>
-                <div id="wallet-selection" class="wallet-selection d-flex gap-2" role="group" aria-label="Выбор кошелька">
-                    <button class="tn btn-dark rounded-pill px-2 py-1 lh-1" data-wallet-id="1">КОШЕЛЁК 1</button>
-                    <button class="btn btn-outline-dark rounded-pill px-2 py-1 lh-1" data-wallet-id="2" disabled>КОШЕЛЁК 2</button>
                 </div>
-            </div>
 
-            <!-- Row 1: Win Rate, Portfolio, Annual Return -->
-            <div class="mb-3 row">
-                <!-- Win Rate -->
-                <div class="col-lg-4 px-2">
-                    <div class="d-flex flex-column portfolio-card border border-dark">
-                        <div class="stat-header bg-dark text-white d-flex align-items-center justify-content-between p-3">
-                            <h5 class="stat-label text-white mb-0">Винрейт</h5>
-                            <div class="stat-icon">
-                                <img src="./assets/icons/icon-procent.svg" alt="Portfolio" class="stat-icon-img">
+                <!-- Second Row: Wallet Selection -->
+                <div class="wallet d-flex align-items-center justify-content-end">
+                    <h6 class="text-dark mb-0 me-3 d-none d-md-block">ВЫБОР КОШЕЛЬКА:</h6>
+                    <div id="wallet-selection" class="wallet-selection d-flex flex-wrap justify-content-end gap-2" role="group" aria-label="Выбор кошелька">
+                        <button class="btn btn-dark rounded-pill px-3 py-2 lh-1" data-wallet-id="1">КОШЕЛЁК 1</button>
+                        <button class="btn btn-outline-dark rounded-pill px-3 py-2 lh-1" data-wallet-id="2" disabled>КОШЕЛЁК 2</button>
+                    </div>
+                </div>
+
+                <!-- Row 1: Win Rate, Portfolio, Annual Return -->
+                <div class="mb-3 row gap-4 gap-lg-0">
+                    <!-- Win Rate -->
+                    <div class="col-lg-4 px-2">
+                        <div class="d-flex flex-column portfolio-card border border-dark">
+                            <div class="stat-header bg-dark text-white d-flex align-items-center justify-content-between p-3">
+                                <h5 class="stat-label text-white mb-0">Винрейт</h5>
+                                <div class="stat-icon">
+                                    <img src="./assets/icons/icon-procent.svg" alt="Portfolio" class="stat-icon-img">
+                                </div>
+                            </div>
+                            <div class="stat-content d-flex align-items-center justify-content-center bg-white" data-stat="winrate">
+                                <h3 id="winrate-value" class="stat-value text-dark mb-0 lh-1">46%</h3>
                             </div>
                         </div>
-                        <div class="stat-content d-flex align-items-center justify-content-center bg-white" data-stat="winrate">
-                            <h3 id="winrate-value" class="stat-value text-dark mb-0 lh-1">46%</h3>
+                    </div>
+
+                    <div class="col-lg-4 px-2">
+                        <!-- Portfolio -->
+                        <div class="d-flex flex-column portfolio-card border border-dark">
+                            <div class="stat-header bg-dark text-white d-flex align-items-center justify-content-between p-3">
+                                <h5 class="stat-label text-white mb-0">Портфель</h5>
+                                <div class="stat-icon">
+                                    <img src="./assets/icons/icon-portfolio.svg" alt="Portfolio" class="stat-icon-img">
+                                </div>
+                            </div>
+                            <div class="stat-content d-flex align-items-center justify-content-center bg-white" data-stat="portfolio">
+                                <h3 id="portfolio-stat-value" class="stat-value text-dark mb-0 lh-1">$337,211</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 px-2">
+                        <!-- Annual Return -->
+                        <div class="d-flex flex-column portfolio-card border border-dark">
+                            <div class="stat-header bg-dark text-white d-flex align-items-center justify-content-between p-3">
+                                <h5 class="stat-label text-white mb-0">Годовая доходность</h5>
+                                <div class="stat-icon">
+                                    <img src="./assets/icons/icon-dollar.svg" alt="Portfolio" class="stat-icon-img">
+                                </div>
+                            </div>
+                            <div class="stat-content d-flex align-items-center justify-content-center bg-white" data-stat="annual-return">
+                                <h3 id="annual-return-value" class="stat-value text-dark mb-0 lh-1">46%</h3>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-lg-4 px-2">
-                    <!-- Portfolio -->
-                    <div class="d-flex flex-column portfolio-card border border-dark">
-                        <div class="stat-header bg-dark text-white d-flex align-items-center justify-content-between p-3">
-                            <h5 class="stat-label text-white mb-0">Портфель</h5>
-                            <div class="stat-icon">
-                                <img src="./assets/icons/icon-portfolio.svg" alt="Portfolio" class="stat-icon-img">
+                <!-- Row 2: Portfolio Chart and Portfolio Change Chart -->
+                <div class="row mb-3 mt-0 gap-4 gap-lg-0">
+                    <div class="col-lg-4 px-2 mt-0">
+                        <div class="d-flex flex-column portfolio-card border border-dark">
+                            <div class="stat-header bg-dark text-white d-flex align-items-center justify-content-between p-3">
+                                <h5 class="stat-label text-white mb-0">Портфолио</h5>
+                                <div class="stat-icon">
+                                    <img src="./assets/icons/icon-portfolio-2.svg" alt="Portfolio" class="stat-icon-img">
+                                </div>
                             </div>
-                        </div>
-                        <div class="stat-content d-flex align-items-center justify-content-center bg-white" data-stat="portfolio">
-                            <h3 id="portfolio-stat-value" class="stat-value text-dark mb-0 lh-1">$337,211</h3>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 px-2">
-                    <!-- Annual Return -->
-                    <div class="d-flex flex-column portfolio-card border border-dark">
-                        <div class="stat-header bg-dark text-white d-flex align-items-center justify-content-between p-3">
-                            <h5 class="stat-label text-white mb-0">Годовая доходность</h5>
-                            <div class="stat-icon">
-                                <img src="./assets/icons/icon-dollar.svg" alt="Portfolio" class="stat-icon-img">
-                            </div>
-                        </div>
-                        <div class="stat-content d-flex align-items-center justify-content-center bg-white" data-stat="annual-return">
-                            <h3 id="annual-return-value" class="stat-value text-dark mb-0 lh-1">46%</h3>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Row 2: Portfolio Chart and Portfolio Change Chart -->
-            <div class="row mb-3 mt-0">
-                <div class="col-lg-4 px-2 mt-0">
-                    <div class="d-flex flex-column portfolio-card border border-dark">
-                        <div class="stat-header bg-dark text-white d-flex align-items-center justify-content-between p-3">
-                            <h5 class="stat-label text-white mb-0">Портфолио</h5>
-                            <div class="stat-icon">
-                                <img src="./assets/icons/icon-portfolio-2.svg" alt="Portfolio" class="stat-icon-img">
-                            </div>
-                        </div>
-                        <div class="stat-content m-auto">
-                            <div class="portfolio-chart-container text-center">
-                                <div class="position-relative d-inline-block">
-                                    <!-- Circular Chart Placeholder -->
-                                    <div class="circular-chart position-relative border border-light bg-white">
-                                        <!-- USDT 60% - Green -->
-                                        <div id="chart-segment" class="chart-segment"></div>
-                                        <!-- Center Content -->
-                                        <div class="chart-center position-absolute top-50 start-50 translate-middle text-center bg-white d-flex flex-column justify-content-center align-items-center shadow-sm">
-                                            <div id="chart-value" class="chart-value text-dark fw-bold">$337,211</div>
-                                            <div class="chart-subtitle text-dark small">^<span id="yearly-return-value">24%</span>доходности за последний год</div>
+                            <div class="stat-content stat-content-portfolio m-auto">
+                                <div class="portfolio-chart-container text-center">
+                                    <div class="position-relative d-inline-block">
+                                        <!-- Circular Chart Placeholder -->
+                                        <div class="circular-chart position-relative border border-light bg-white">
+                                            <!-- USDT 60% - Green -->
+                                            <div id="chart-segment" class="chart-segment"></div>
+                                            <!-- Center Content -->
+                                            <div class="chart-center position-absolute top-50 start-50 translate-middle text-center bg-white d-flex flex-column justify-content-center align-items-center shadow-sm">
+                                                <div id="chart-value" class="chart-value text-dark fw-semibold">$337,211</div>
+                                                <div class="chart-procent">
+                                                    <span id="yearly-return-value">24%</span>
+                                                </div>
+                                                <div class="chart-subtitle text-dark small">доходности за последний год</div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-lg-8 px-2 mt-0">
-                    <div class="portfolio-card chart-section bg-white border border-dark p-3">
-                        <h5 class="stat-label text-dark mb-3">Изменение портфолио</h5>
-                        <div class="chart-container bg-white border border-light text-center">
-                            <img id="portfolio-chart" src="./assets/images/graph.png" alt="Portfolio Change Chart" class="img-fluid">
+                    <div class="col-lg-8 px-2 mt-0">
+                        <div class="portfolio-card chart-section bg-white border border-dark p-3">
+                            <h5 class="stat-label text-dark mb-3">Изменение портфолио</h5>
+                            <div class="chart-container bg-white border border-light text-center">
+                                <img id="portfolio-chart" src="./assets/images/graph.png" alt="Portfolio Change Chart" class="img-fluid">
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Row 3: Assets and Sharpe Ratio Chart -->
-            <div class="row">
-                <div class="col-lg-4 px-2 mt-0">
-                    <div class="d-flex flex-column portfolio-card border border-dark">
-                        <div class="stat-header bg-dark text-white d-flex align-items-center justify-content-between p-3">
-                            <h5 class="stat-label text-white mb-0">Активы</h5>
-                            <div class="stat-icon">
-                                <img src="./assets/icons/icon-assets.svg" alt="Assets" class="stat-icon-img">
-                            </div>
-                        </div>
-                        <div class="stat-content-assets d-flex m-auto flex-column justify-content-center overflow-auto">
-                            <div id="assets-list" class="assets-list d-flex flex-column gap-4">
-                                <div class="asset-item">
-                                    <div class="d-flex align-items-center">
-                                        <div class="asset-icon bg-success rounded-circle d-flex align-items-center justify-content-center me-2">
-                                            <img src="./assets/icons/tokenico/USDT.png" alt="USDT" class="asset-icon-img">
-                                        </div>
-                                        <span class="text-dark">USDT - 60%</span>
-                                    </div>
-                                </div>
-                                <div class="asset-item d-flex align-items-center justify-content-between py-2">
-                                    <div class="d-flex align-items-center">
-                                        <div class="asset-icon bg-warning rounded-circle d-flex align-items-center justify-content-center me-2">
-                                            <img src="./assets/icons/tokenico/BTC.png" alt="Bitcoin" class="asset-icon-img">
-                                        </div>
-                                        <span class="text-dark">BTC - 10%</span>
-                                    </div>
-                                </div>
-                                <div class="asset-item d-flex align-items-center justify-content-between py-2">
-                                    <div class="d-flex align-items-center">
-                                        <div class="asset-icon bg-primary rounded-circle d-flex align-items-center justify-content-center me-2">
-                                            <img src="./assets/icons/tokenico/ETH.png" alt="ETH" class="asset-icon-img">
-                                        </div>
-                                        <span class="text-dark">ETH - 20%</span>
-                                    </div>
-                                </div>
-                                <div class="asset-item d-flex align-items-center justify-content-between mb-2 py-2">
-                                    <div class="d-flex align-items-center">
-                                        <div class="asset-icon bg-danger rounded-circle d-flex align-items-center justify-content-center me-2">
-                                            <img src="./assets/icons/tokenico/AVAX.png" alt="AVAX" class="asset-icon-img">
-                                        </div>
-                                        <span class="text-dark">AVAX - 13%</span>
-                                    </div>
+                <!-- Row 3: Assets and Sharpe Ratio Chart -->
+                <div class="row gap-4 gap-lg-0">
+                    <div class="col-lg-4 px-2 mt-0">
+                        <div class="d-flex flex-column portfolio-card border border-dark">
+                            <div class="stat-header bg-dark text-white d-flex align-items-center justify-content-between p-3">
+                                <h5 class="stat-label text-white mb-0">Активы</h5>
+                                <div class="stat-icon">
+                                    <img src="./assets/icons/icon-assets.svg" alt="Assets" class="stat-icon-img">
                                 </div>
                             </div>
-
-                            <!-- Template for asset items (hidden) -->
-                            <template id="asset-template">
-                                <div class="asset-item d-flex align-items-center justify-content-between mb-2 py-2">
-                                    <div class="d-flex align-items-center">
-                                        <div class="asset-icon rounded-circle d-flex align-items-center justify-content-center me-2">
-                                            <img class="asset-icon-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
-                                            <span class="text-white small fw-bold" style="display: none;"></span>
+                            <div class="stat-content-assets d-flex mx-auto flex-column justify-content-center overflow-auto">
+                                <div id="assets-list" class="assets-list d-flex flex-column gap-4">
+                                    <div class="asset-item">
+                                        <div class="d-flex align-items-center">
+                                            <div class="asset-icon me-2">
+                                                <img src="./assets/icons/tokenico/USDT.png" alt="USDT" class="asset-icon-img">
+                                            </div>
+                                            <span class="text-dark">USDT - 60%</span>
                                         </div>
-                                        <span class="text-dark asset-text"></span>
+                                    </div>
+                                    <div class="asset-item d-flex align-items-center justify-content-between py-2">
+                                        <div class="d-flex align-items-center">
+                                            <div class="asset-icon me-2">
+                                                <img src="./assets/icons/tokenico/BTC.png" alt="Bitcoin" class="asset-icon-img">
+                                            </div>
+                                            <span class="text-dark">BTC - 10%</span>
+                                        </div>
+                                    </div>
+                                    <div class="asset-item d-flex align-items-center justify-content-between py-2">
+                                        <div class="d-flex align-items-center">
+                                            <div class="asset-icon me-2">
+                                                <img src="./assets/icons/tokenico/ETH.png" alt="ETH" class="asset-icon-img">
+                                            </div>
+                                            <span class="text-dark">ETH - 20%</span>
+                                        </div>
+                                    </div>
+                                    <div class="asset-item d-flex align-items-center justify-content-between py-2">
+                                        <div class="d-flex align-items-center">
+                                            <div class="asset-icon me-2">
+                                                <img src="./assets/icons/tokenico/avax.png" alt="AVAX" class="asset-icon-img">
+                                            </div>
+                                            <span class="text-dark">AVAX - 13%</span>
+                                        </div>
                                     </div>
                                 </div>
-                            </template>
+
+                                <!-- Template for asset items (hidden) -->
+                                <template id="asset-template">
+                                    <div class="asset-item d-flex align-items-center justify-content-between py-2">
+                                        <div class="d-flex align-items-center">
+                                            <div class="asset-icon rounded-circle d-flex align-items-center justify-content-center me-2">
+                                                <img class="asset-icon-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                                                <span class="text-white small fw-bold" style="display: none;"></span>
+                                            </div>
+                                            <span class="text-dark asset-text"></span>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-lg-8 px-2 mt-0">
-                    <div class="portfolio-card chart-section bg-white border border-dark p-3">
-                        <h5 class="stat-label text-dark mb-3">Коэффициент Шарпа</h5>
-                        <div class="chart-container bg-white border border-light text-center">
-                            <img id="sharpe-chart" src="./assets/images/graph.png" alt="Sharpe Ratio Chart" class="img-fluid">
+                    <div class="col-lg-8 px-2 mt-0">
+                        <div class="portfolio-card chart-section bg-white border border-dark p-3">
+                            <h5 class="stat-label text-dark mb-3">Коэффициент Шарпа</h5>
+                            <div class="chart-container bg-white border border-light text-center">
+                                <img id="sharpe-chart" src="./assets/images/graph.png" alt="Sharpe Ratio Chart" class="img-fluid">
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <!-- Portfolio Section -->
 
     <!-- Investment Section -->
     <section id="investment" class="py-5 bg-dark text-white scroll-hidden">
         <div class="section-header py-4 border-bottom border-top border-color-white-30">
-            <div class="container">
+            <div class="container-custom">
                 <div class="section-header-content d-flex align-items-end">
                     <h2 class="section-title mb-0">Инвестиции</h2>
-                    <span class="section-subtitle color-white-30 text-uppercase mb-2 lh-1">В СТРУКТУРУ ПРОЕКТА</span>
+                    <span class="section-subtitle color-white-30 text-uppercase mb-1 mb-md-2 lh-1">В СТРУКТУРУ ПРОЕКТА</span>
                 </div>
             </div>
         </div>
 
-        <div class="container">
+        <div class="container-custom">
                 <h2 class="text-center investment-h2-title">
                     "Наша цель — дать инвесторам мощный инструмент для точных решений и оптимизации стратегий."
                 </h2>
@@ -398,7 +406,7 @@
     <!-- Team Section -->
     <section id="team" class="py-5 bg-dark text-white scroll-hidden">
         <div class="section-header py-4 border-bottom border-top border-color-white-30">
-            <div class="container">
+            <div class="container-custom">
                 <div class="section-header-content d-flex align-items-end">
                     <h2 class="section-title mb-0">Команда</h2>
                     <span class="section-subtitle color-white-30 text-uppercase mb-2 lh-1">БЕЗ КОГО БЫ НИЧЕГО НЕ ПОЛУЧИЛОСЬ</span>
@@ -406,83 +414,74 @@
             </div>
         </div>
 
-        <div class="container team-container d-flex flex-column">
+        <div class="container-custom team-container d-flex flex-column">
 
             <!-- Team Member 2 -->
-            <div class="team-card bg-darker p-2 d-flex gap-4">
+            <div class="team-card bg-darker p-2 gap-3">
                 <div class="team-image">
                     <img src="./assets/images/team-rostislav-4bd322.png" alt="Ростислав"
                         class="img-fluid">
                 </div>
-
-                <div class="team-info p-3 d-flex flex-column justify-content-between w-100">
-                    <div class="d-flex align-items-center justify-content-between flex-wrap mb-2">
-                        <h4 class="team-name mb-0 me-3">Ростислав</h4>
-                        <div class="team-tags bg-dark d-flex flex-wrap text-uppercase p-2">
-                            <span class="">Founder</span>
-                            <span class="">Product</span>
-                            <span class="">ML</span>
-                        </div>
+                <div class="team-info d-flex justify-content-between flex-wrap mb-0 gap-3">
+                    <h4 class="team-name mb-0 me-3">Ростислав</h4>
+                    <div class="team-tags bg-dark d-flex flex-wrap text-uppercase p-2">
+                        <span class="">Founder</span>
+                        <span class="">Product</span>
+                        <span class="">ML</span>
                     </div>
-                    <p class="team-description text-white-50 mb-0">
-                        Разработал ML‑soft для выявления разворотных паттернов и структурных сломов.
-                        DEPT Ecosystem; Screener; D‑Space 13k подписчиков; 150 в платном комьюнити; 50 на
-                        обучении.
-                    </p>
                 </div>
+                <p class="team-description text-white-50 mb-0">
+                    Разработал ML‑soft для выявления разворотных паттернов и структурных сломов.
+                    DEPT Ecosystem; Screener; D‑Space 13k подписчиков; 150 в платном комьюнити; 50 на
+                    обучении.
+                </p>
             </div>
 
             <!-- Team Member 2 -->
-            <div class="team-card bg-darker p-2 d-flex gap-4">
+            <div class="team-card bg-darker p-2 gap-3">
                 <div class="team-image">
                     <img src="./assets/images/team-kirill-4bd322.png" alt="Кирилл"
                          class="img-fluid">
                 </div>
-
-                <div class="team-info p-3 d-flex flex-column justify-content-between w-100">
-                    <div class="d-flex align-items-center justify-content-between flex-wrap mb-2">
-                        <h4 class="team-name mb-0 me-3">Кирилл</h4>
-                        <div class="team-tags bg-dark d-flex flex-wrap text-uppercase p-2">
-                            <span class="">Trading Lead</span>
-                            <span class="">Education</span>
-                        </div>
+                <div class="team-info d-flex justify-content-between flex-wrap mb-0 gap-3">
+                    <h4 class="team-name mb-0 me-3">Кирилл</h4>
+                    <div class="team-tags bg-dark d-flex flex-wrap text-uppercase p-2">
+                        <span class="">Trading Lead</span>
+                        <span class="">Education</span>
                     </div>
-                    <p class="team-description text-white-50 mb-0">
-                        Участник международных AI/ML‑хакатонов; разработчик Telegram WebApp Dept AI;
-                        опыт тимлида в Dlux Trading.
-                    </p>
                 </div>
+                <p class="team-description text-white-50 mb-0">
+                    Участник международных AI/ML‑хакатонов; разработчик Telegram WebApp Dept AI;
+                    опыт тимлида в Dlux Trading.
+                </p>
             </div>
 
             <!-- Team Member 3 -->
-            <div class="team-card bg-darker p-2 d-flex gap-4">
+            <div class="team-card bg-darker p-2  gap-3">
                 <div class="team-image">
                     <img src="./assets/images/team-egor-4bd322.png" alt="Кирилл"
                          class="img-fluid">
                 </div>
-
-                <div class="team-info p-3 d-flex flex-column justify-content-between w-100">
-                    <div class="d-flex align-items-center justify-content-between flex-wrap mb-2">
-                        <h4 class="team-name mb-0 me-3">Егор</h4>
-                        <div class="team-tags bg-dark d-flex flex-wrap text-uppercase p-2">
-                            <span class="">Co-Founder Lead</span>
-                            <span class="">Strategy</span>
-                            <span class="">Tech-Lead</span>
-                        </div>
+                <div class="team-info d-flex justify-content-between flex-wrap mb-0 gap-3">
+                    <h4 class="team-name mb-0 me-3">Егор</h4>
+                    <div class="team-tags bg-dark d-flex flex-wrap text-uppercase p-2">
+                        <span class="">Co-Founder Lead</span>
+                        <span class="">Strategy</span>
+                        <span class="">Tech-Lead</span>
                     </div>
-                    <p class="team-description text-white-50 mb-0">
-                        Форекс‑трейдер, прошёл проп‑челленджи (FTMO, MyForexFunds).
-                        Автор обучения DEPT, ведёт личные уроки и риск‑процессы.
-                    </p>
                 </div>
+                <p class="team-description text-white-50 mb-0">
+                    Форекс‑трейдер, прошёл проп‑челленджи (FTMO, MyForexFunds).
+                    Автор обучения DEPT, ведёт личные уроки и риск‑процессы.
+                </p>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
     <footer class="bg-dark text-white">
-        <div class="container">
-            <div class="row">
+
+            <div class="row mx-0">
                 <div class="footer-col col-md-4">
                     <img src="assets/icons/footer-dp.svg" alt="Dp" class="img-fluid">
                     <div class="color-white-30 text-uppercase">
@@ -502,7 +501,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+
     </footer>
 
     <!-- Bootstrap 5 JS -->
