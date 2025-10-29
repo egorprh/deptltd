@@ -1,0 +1,51 @@
+ ⨯ MongooseServerSelectionError: connect ECONNREFUSED 79.137.192.124:27017
+    at <unknown> (MongooseServerSelectionError: connect ECONNREFUSED 79.137.192.124:27017)
+    at async k (.next/server/chunks/ssr/[root-of-the-server]__67c55d1d._.js:1:1559) {
+  errorLabelSet: Set(0) {},
+  reason: [TopologyDescription],
+  code: undefined,
+  digest: '4122833951',
+  [cause]: [TopologyDescription]
+}
+ ⨯ MongooseServerSelectionError: connect ECONNREFUSED 79.137.192.124:27017
+    at <unknown> (MongooseServerSelectionError: connect ECONNREFUSED 79.137.192.124:27017)
+    at async k (.next/server/chunks/ssr/[root-of-the-server]__67c55d1d._.js:1:1559) {
+  errorLabelSet: Set(0) {},
+  reason: [TopologyDescription],
+  code: undefined,
+  digest: '4122833951',
+  [cause]: [TopologyDescription]
+}
+ ⨯ MongooseServerSelectionError: connect ECONNREFUSED 79.137.192.124:27017
+    at <unknown> (MongooseServerSelectionError: connect ECONNREFUSED 79.137.192.124:27017)
+    at async k (.next/server/chunks/ssr/[root-of-the-server]__67c55d1d._.js:1:1559) {
+  errorLabelSet: Set(0) {},
+  reason: [TopologyDescription],
+  code: undefined,
+  digest: '4122833951',
+  [cause]: [TopologyDescription]
+}
+ ⨯ [MongooseError: Operation `users.find()` buffering timed out after 10000ms] {
+  digest: '532448276'
+}
+ ⨯ MongooseServerSelectionError: connect ECONNREFUSED 79.137.192.124:27017
+    at <unknown> (MongooseServerSelectionError: connect ECONNREFUSED 79.137.192.124:27017)
+    at async k (.next/server/chunks/ssr/[root-of-the-server]__67c55d1d._.js:1:1559) {
+  errorLabelSet: Set(0) {},
+  reason: [TopologyDescription],
+  code: undefined,
+  digest: '4122833951',
+  [cause]: [TopologyDescription]
+}
+ ⨯ [MongooseError: Operation `users.find()` buffering timed out after 10000ms] {
+  digest: '532448276'
+}
+ ⨯ [MongooseError: Operation `users.find()` buffering timed out after 10000ms] {
+  digest: '532448276'
+}
+ ⨯ [MongooseError: Operation `users.find()` buffering timed out after 10000ms] {
+  digest: '532448276'
+}
+ ⨯ [MongooseError: Operation `users.find()` buffering timed out after 10000ms] {
+  digest: '532448276'
+}

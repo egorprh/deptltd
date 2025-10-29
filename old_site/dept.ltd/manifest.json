@@ -1,0 +1,23 @@
+{
+    "name": "department",
+    "short_name": "department",
+    "description": "We play different",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#fafafa",
+    "theme_color": "#fafafa",
+    "icons": [
+        {
+            "src": "/favicon.ico",
+            "sizes": "any",
+            "type": "image/x-icon",
+            "purpose": "any"
+        },
+        {
+            "src": "/favicon.ico",
+            "sizes": "any",
+            "type": "image/x-icon",
+            "purpose": "maskable"
+        }
+    ]
+}
