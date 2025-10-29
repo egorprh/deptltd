@@ -194,7 +194,7 @@ function updateAssetsList(assets) {
 
         // Обновляем источник изображения иконки (ищем по названию токена)
         const img = clone.querySelector('.asset-icon-img');
-        img.src = `./assets/icons/tokenico/${asset.name}.png`;             // Путь к иконке токена по названию
+        img.src = `./assets/icons/tokenico/${asset.name.toLowerCase()}.png`; // Путь к иконке токена в нижнем регистре
         img.alt = asset.name;                                              // Альтернативный текст
 
         // Обновляем резервную букву (показывается при ошибке загрузки изображения)

@@ -27,6 +27,8 @@ jobs:
         uploads/
         .git/
         .gitignore
+        .DS_Store
+        **/.DS_Store
         nginx.conf
         deploy/
         Dockerfile
