@@ -59,7 +59,7 @@ async function initPortfolio() {
  * Выполняет HTTP запрос к файлу с данными портфеля
  */
 async function loadData() {
-    const response = await fetch('../assets/data/portfolio-data.json');        // Запрашиваем JSON файл
+    const response = await fetch('/data/portfolio-data.json');        // Запрашиваем JSON файл
     if (!response.ok) {
         throw new Error(`HTTP ошибка! статус: ${response.status}`);          // Выбрасываем ошибку при неудачном запросе
     }
@@ -211,27 +211,47 @@ function updateAssetsList(assets) {
 
 
 
-/**
- * Обновление круговой диаграммы
- * Создает конический градиент на основе процентов активов
- */
+let portfolioChartInstance = null;  // глобально
+
 function updateCircularChart(assets) {
-    const chartSegment = document.querySelector(SELECTORS.chartSegment);    // Сегмент круговой диаграммы
-    if (!chartSegment) return;                                              // Выходим, если элемент не найден
+    const ctx = document.querySelector(SELECTORS.chartSegment)?.getContext('2d');
+    if (!ctx) return;
 
-    let cumulativePercentage = 0;                                            // Накопительный процент для расчета углов
-    const gradientStops = assets.map((asset, index) => {
-        const startAngle = cumulativePercentage * 3.6;                      // Начальный угол (3.6 = 360°/100%)
-        cumulativePercentage += asset.percentage;                            // Добавляем процент актива
-        const endAngle = cumulativePercentage * 3.6;                        // Конечный угол
+    const data = assets.map(a => a.percentage);
+    const labels = assets.map(a => a.name);
+    const backgroundColors = assets.map((_, i) => CHART_COLORS[i] || CHART_COLORS[CHART_COLORS.length - 1]);
 
-        // Выбираем цвет из палитры по индексу или fallback цвет
-        const color = CHART_COLORS[index] || CHART_COLORS[CHART_COLORS.length - 1];
-        return `${color} ${startAngle}deg ${endAngle}deg`;                  // Создаем градиентный сегмент
-    }).join(', ');                                                          // Объединяем все сегменты
+    if (portfolioChartInstance) {
+        portfolioChartInstance.data.datasets[0].data = data;
+        portfolioChartInstance.data.labels = labels;
+        portfolioChartInstance.data.datasets[0].backgroundColor = backgroundColors;
+        portfolioChartInstance.update();
+        return;
+    }
 
-    // Применяем конический градиент к элементу
-    chartSegment.style.background = `conic-gradient(${gradientStops})`;
+    portfolioChartInstance = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: data,
+                backgroundColor: backgroundColors,
+                borderWidth: 2,
+                borderColor: '#ffffff',
+                borderRadius: 11,
+                spacing: 6
+            }]
+        },
+        options: {
+            cutout: '73%',
+            responsive: true,
+            plugins: {
+                legend: { display: false },
+                tooltip: { enabled: true }
+            },
+            animation: { animateRotate: true, animateScale: true }
+        }
+    });
 }
 
 /**
