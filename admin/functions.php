@@ -160,32 +160,79 @@ function formatFileSize($bytes) {
 
 // Загрузка файла
 function uploadFile($file) {
+    $debug = [];
+    $debug['time'] = date('c');
+    $debug['server'] = [
+        'cwd' => getcwd(),
+        'script' => isset($_SERVER['SCRIPT_FILENAME']) ? $_SERVER['SCRIPT_FILENAME'] : null,
+        'user' => function_exists('get_current_user') ? get_current_user() : null,
+    ];
+    if (function_exists('posix_geteuid') && function_exists('posix_getpwuid')) {
+        $euid = @posix_geteuid();
+        $pw = $euid !== false ? @posix_getpwuid($euid) : null;
+        $debug['server']['euid'] = $euid;
+        $debug['server']['user_pw'] = $pw;
+    }
+    $debug['php_ini'] = [
+        'file_uploads' => ini_get('file_uploads'),
+        'upload_max_filesize' => ini_get('upload_max_filesize'),
+        'post_max_size' => ini_get('post_max_size'),
+        'memory_limit' => ini_get('memory_limit'),
+        'upload_tmp_dir' => ini_get('upload_tmp_dir'),
+        'open_basedir' => ini_get('open_basedir'),
+    ];
+    $debug['request_file'] = $file;
+
     // Валидация типа файла
     $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
     if (!in_array($extension, ALLOWED_EXTENSIONS)) {
-        return ['success' => false, 'message' => 'Недопустимый тип файла. Разрешены: ' . implode(', ', ALLOWED_EXTENSIONS)];
+        return ['success' => false, 'message' => 'Недопустимый тип файла. Разрешены: ' . implode(', ', ALLOWED_EXTENSIONS), 'debug' => $debug];
     }
     
     // Валидация размера
     if ($file['size'] > MAX_FILE_SIZE) {
-        return ['success' => false, 'message' => 'Файл слишком большой. Максимум: ' . formatFileSize(MAX_FILE_SIZE)];
+        return ['success' => false, 'message' => 'Файл слишком большой. Максимум: ' . formatFileSize(MAX_FILE_SIZE), 'debug' => $debug];
     }
     
     // Создание папки если не существует
     $uploadDir = UPLOADS_DIR . 'images/';
+    $debug['paths'] = [
+        'UPLOADS_DIR' => UPLOADS_DIR,
+        'uploadDir' => $uploadDir,
+        'uploadDir_exists' => is_dir($uploadDir),
+        'UPLOADS_DIR_exists' => is_dir(UPLOADS_DIR),
+        'UPLOADS_DIR_writable' => is_writable(UPLOADS_DIR),
+        'uploadDir_writable' => is_dir($uploadDir) ? is_writable($uploadDir) : null,
+    ];
     if (!is_dir($uploadDir)) {
-        mkdir($uploadDir, 0755, true);
+        $mk = @mkdir($uploadDir, 0755, true);
+        $debug['paths']['mkdir_created'] = $mk;
     }
     
     // Сохранение файла
     $filename = sanitizeFilename($file['name']);
     $targetPath = $uploadDir . $filename;
+    $debug['paths']['targetPath'] = $targetPath;
+    $debug['pre_checks'] = [
+        'tmp_name_exists' => isset($file['tmp_name']) ? file_exists($file['tmp_name']) : null,
+        'is_uploaded_file' => isset($file['tmp_name']) ? @is_uploaded_file($file['tmp_name']) : null,
+    ];
     
-    if (move_uploaded_file($file['tmp_name'], $targetPath)) {
-        return ['success' => true, 'message' => "Файл {$filename} успешно загружен", 'filename' => $filename];
+    if (@move_uploaded_file($file['tmp_name'], $targetPath)) {
+        return ['success' => true, 'message' => "Файл {$filename} успешно загружен", 'filename' => $filename, 'debug' => $debug];
     }
     
-    return ['success' => false, 'message' => 'Ошибка загрузки файла'];
+    $lastErr = function_exists('error_get_last') ? error_get_last() : null;
+    $debug['move_error'] = [
+        'last_error' => $lastErr,
+        'target_parent_perms' => @substr(sprintf('%o', @fileperms($uploadDir)), -4),
+        'target_parent_owner' => @fileowner($uploadDir),
+        'target_parent_group' => @filegroup($uploadDir),
+        'upload_tmp_dir_exists' => ($dir = ini_get('upload_tmp_dir')) ? is_dir($dir) : null,
+        'upload_tmp_dir_writable' => ($dir = ini_get('upload_tmp_dir')) ? is_writable($dir) : null,
+    ];
+    
+    return ['success' => false, 'message' => 'Ошибка загрузки файла', 'debug' => $debug];
 }
 
 // Удаление файла

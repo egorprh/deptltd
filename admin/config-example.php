@@ -14,4 +14,7 @@ define('PORTFOLIO_FILE', DATA_DIR . 'portfolio-data.json');
 define('MAX_FILE_SIZE', 5 * 1024 * 1024); // 5MB
 define('ALLOWED_EXTENSIONS', ['jpg', 'jpeg', 'png', 'gif', 'svg', 'ico']);
 
+// Режим отладки (можно переопределить параметром ?debug=1)
+define('ADMIN_DEBUG', false);
+
 ?>
