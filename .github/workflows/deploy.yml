@@ -33,6 +33,7 @@ jobs:
         deploy/
         Dockerfile
         docker-compose.yml
+        data/portfolio-data.json
         EOF
         
         # Copy all files except excluded ones
