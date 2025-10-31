@@ -4,14 +4,49 @@ checkAuth();
 
 $success = '';
 $error = '';
+$debugInfo = [];
 
 // Загрузка данных портфеля
 $portfolioData = loadPortfolioData();
 $uploadedFiles = getUploadedImageFiles();
 
+// Базовая диагностика окружения (всегда собираем, показываем при ошибке или включенной отладке)
+$debugInfo['env'] = [
+    'paths' => [
+        '__DIR__' => __DIR__,
+        'cwd' => getcwd(),
+        'DATA_DIR' => defined('DATA_DIR') ? DATA_DIR : null,
+        'PORTFOLIO_FILE' => defined('PORTFOLIO_FILE') ? PORTFOLIO_FILE : null,
+    ],
+    'state' => [
+        'data_dir_exists' => defined('DATA_DIR') ? is_dir(DATA_DIR) : null,
+        'data_dir_writable' => defined('DATA_DIR') && is_dir(DATA_DIR) ? is_writable(DATA_DIR) : null,
+        'portfolio_exists' => defined('PORTFOLIO_FILE') ? file_exists(PORTFOLIO_FILE) : null,
+        'portfolio_writable' => defined('PORTFOLIO_FILE') && file_exists(PORTFOLIO_FILE) ? is_writable(PORTFOLIO_FILE) : null,
+    ],
+    'perms' => [
+        'data_dir_perms' => defined('DATA_DIR') && is_dir(DATA_DIR) ? substr(sprintf('%o', @fileperms(DATA_DIR)), -4) : null,
+        'portfolio_perms' => defined('PORTFOLIO_FILE') && file_exists(PORTFOLIO_FILE) ? substr(sprintf('%o', @fileperms(PORTFOLIO_FILE)), -4) : null,
+    ],
+    'php_ini' => [
+        'open_basedir' => ini_get('open_basedir'),
+    ],
+];
+if (function_exists('posix_geteuid') && function_exists('posix_getpwuid')) {
+    $euid = @posix_geteuid();
+    $debugInfo['env']['user'] = [
+        'euid' => $euid,
+        'pw' => $euid !== false ? @posix_getpwuid($euid) : null,
+    ];
+}
+
 // Обработка действий
 if ($_POST) {
     $action = $_POST['action'] ?? '';
+    $debugInfo['request'] = [
+        'action' => $action,
+        'post_keys' => array_keys($_POST ?? []),
+    ];
     
     switch ($action) {
         case 'create':
@@ -30,6 +65,10 @@ if ($_POST) {
             
             // Валидация активов
             $assetsValidation = validateAssets($_POST['assets'] ?? '');
+            $debugInfo['create'] = [
+                'assets_input' => $_POST['assets'] ?? '',
+                'assets_validation' => $assetsValidation,
+            ];
             if (!$assetsValidation['valid']) {
                 $error = $assetsValidation['message'];
                 break;
@@ -44,7 +83,9 @@ if ($_POST) {
                 $portfolioData['activeWalletId'] = $newWallet['id'];
             }
             
-            if (savePortfolioData($portfolioData)) {
+            $saveOk = savePortfolioData($portfolioData);
+            $debugInfo['create']['save'] = [ 'ok' => $saveOk, 'last_error' => function_exists('error_get_last') ? error_get_last() : null ];
+            if ($saveOk) {
                 $success = 'Кошелек успешно создан!';
                 $portfolioData = loadPortfolioData(); // Перезагружаем данные
             } else {
@@ -66,6 +107,11 @@ if ($_POST) {
             
             // Валидация активов
             $assetsValidation = validateAssets($_POST['assets'] ?? '');
+            $debugInfo['edit'] = [
+                'wallet_id' => $walletId,
+                'assets_input' => $_POST['assets'] ?? '',
+                'assets_validation' => $assetsValidation,
+            ];
             if (!$assetsValidation['valid']) {
                 $error = $assetsValidation['message'];
                 break;
@@ -89,7 +135,9 @@ if ($_POST) {
                 $portfolioData['activeWalletId'] = $walletId;
             }
             
-            if (savePortfolioData($portfolioData)) {
+            $saveOk = savePortfolioData($portfolioData);
+            $debugInfo['edit']['save'] = [ 'ok' => $saveOk, 'last_error' => function_exists('error_get_last') ? error_get_last() : null ];
+            if ($saveOk) {
                 $success = 'Кошелек успешно обновлен!';
                 $portfolioData = loadPortfolioData(); // Перезагружаем данные
             } else {
@@ -118,7 +166,9 @@ if ($_POST) {
                 $portfolioData['activeWalletId'] = null;
             }
             
-            if (savePortfolioData($portfolioData)) {
+            $saveOk = savePortfolioData($portfolioData);
+            $debugInfo['delete'] = [ 'wallet_id' => $walletId, 'save' => [ 'ok' => $saveOk, 'last_error' => function_exists('error_get_last') ? error_get_last() : null ]];
+            if ($saveOk) {
                 $success = "Кошелек '{$walletName}' успешно удален!";
                 $portfolioData = loadPortfolioData(); // Перезагружаем данные
             } else {
@@ -152,7 +202,9 @@ if ($_POST) {
                 $portfolioData['wallets'][$index] = $portfolioData['wallets'][$newIndex];
                 $portfolioData['wallets'][$newIndex] = $temp;
                 
-                if (savePortfolioData($portfolioData)) {
+                $saveOk = savePortfolioData($portfolioData);
+                $debugInfo['move'] = [ 'wallet_id' => $walletId, 'direction' => $direction, 'save' => [ 'ok' => $saveOk, 'last_error' => function_exists('error_get_last') ? error_get_last() : null ] ];
+                if ($saveOk) {
                     $success = 'Порядок кошельков обновлен!';
                     $portfolioData = loadPortfolioData(); // Перезагружаем данные
                 } else {
@@ -191,6 +243,7 @@ if (isset($_GET['edit'])) {
         </div>
     </nav>
     
+    <?php $showDebug = (defined('ADMIN_DEBUG') && ADMIN_DEBUG) || (isset($_GET['debug']) && $_GET['debug'] == '1') || (bool)$error; ?>
     <div class="container mt-4">
         <div class="row">
             <div class="col-12">
@@ -205,6 +258,25 @@ if (isset($_GET['edit'])) {
                 <?php if ($error): ?>
                 <div class="alert alert-danger" role="alert">
                     <?= htmlspecialchars($error) ?>
+                </div>
+                <?php endif; ?>
+
+                <div class="mb-2">
+                    <form method="get" class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="toggleDebug" name="debug" value="1" <?= $showDebug ? 'checked' : '' ?> onchange="this.form.submit()">
+                        <label class="form-check-label" for="toggleDebug">Режим отладки</label>
+                    </form>
+                </div>
+
+                <?php if ($showDebug): ?>
+                <div class="alert alert-secondary" role="alert">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <strong>Отладочная информация</strong>
+                        <a href="?" class="btn btn-sm btn-outline-secondary">Скрыть</a>
+                    </div>
+                    <pre style="white-space: pre-wrap; word-break: break-word; background: #f8f9fa; padding: 12px; border-radius: 6px; margin-top: 10px; max-height: 500px; overflow: auto;">
+<?= htmlspecialchars(json_encode($debugInfo, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)) ?>
+                    </pre>
                 </div>
                 <?php endif; ?>
             </div>

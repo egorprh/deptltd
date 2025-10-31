@@ -4,6 +4,7 @@ checkAuth();
 
 $success = '';
 $error = '';
+$debugInfo = [];
 
 // Обработка загрузки файла
 if ($_POST && isset($_FILES['file'])) {
@@ -17,16 +18,20 @@ if ($_POST && isset($_FILES['file'])) {
             $file['name'] = $customName . '.' . $extension;
         }
         
-        $result = uploadFile($file);
+		$result = uploadFile($file);
         
         if ($result['success']) {
             $success = $result['message'];
         } else {
             $error = $result['message'];
         }
+		if (isset($result['debug'])) {
+			$debugInfo['upload'] = $result['debug'];
+		}
     } else {
         $error = 'Ошибка загрузки файла';
-    }
+		$debugInfo['files_error_code'] = $file['error'] ?? null;
+	}
 }
 
 // Обработка удаления файла
@@ -42,6 +47,50 @@ if ($_GET && isset($_GET['delete'])) {
 
 // Получение списка файлов
 $files = getUploadedFiles();
+$showDebug = (defined('ADMIN_DEBUG') && ADMIN_DEBUG) || (isset($_GET['debug']) && $_GET['debug'] == '1') || (bool)$error;
+
+// Базовая диагностика окружения (всегда собирается, показывается при ошибке или ?debug=1)
+$uploadDir = UPLOADS_DIR . 'images/';
+$debugInfo['env'] = [
+	'paths' => [
+		'__DIR__' => __DIR__,
+		'cwd' => getcwd(),
+		'UPLOADS_DIR' => UPLOADS_DIR,
+		'uploadDir' => $uploadDir,
+		'DATA_DIR' => defined('DATA_DIR') ? DATA_DIR : null,
+		'PORTFOLIO_FILE' => defined('PORTFOLIO_FILE') ? PORTFOLIO_FILE : null,
+	],
+	'paths_state' => [
+		'uploads_exists' => is_dir(UPLOADS_DIR),
+		'uploads_writable' => is_dir(UPLOADS_DIR) ? is_writable(UPLOADS_DIR) : null,
+		'uploadDir_exists' => is_dir($uploadDir),
+		'uploadDir_writable' => is_dir($uploadDir) ? is_writable($uploadDir) : null,
+		'data_exists' => defined('DATA_DIR') ? is_dir(DATA_DIR) : null,
+		'portfolio_exists' => defined('PORTFOLIO_FILE') ? file_exists(PORTFOLIO_FILE) : null,
+		'portfolio_writable' => defined('PORTFOLIO_FILE') && file_exists(PORTFOLIO_FILE) ? is_writable(PORTFOLIO_FILE) : null,
+	],
+	'perms' => [
+		'uploads_perms' => is_dir(UPLOADS_DIR) ? substr(sprintf('%o', @fileperms(UPLOADS_DIR)), -4) : null,
+		'uploadDir_perms' => is_dir($uploadDir) ? substr(sprintf('%o', @fileperms($uploadDir)), -4) : null,
+	],
+	'php_ini' => [
+		'file_uploads' => ini_get('file_uploads'),
+		'upload_max_filesize' => ini_get('upload_max_filesize'),
+		'post_max_size' => ini_get('post_max_size'),
+		'memory_limit' => ini_get('memory_limit'),
+		'upload_tmp_dir' => ini_get('upload_tmp_dir'),
+		'open_basedir' => ini_get('open_basedir'),
+	],
+];
+if (function_exists('posix_geteuid') && function_exists('posix_getpwuid')) {
+	$euid = @posix_geteuid();
+	$debugInfo['env']['user'] = [
+		'euid' => $euid,
+		'pw' => $euid !== false ? @posix_getpwuid($euid) : null,
+	];
+} else {
+	$debugInfo['env']['user'] = [ 'current' => function_exists('get_current_user') ? get_current_user() : null ];
+}
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -75,6 +124,29 @@ $files = getUploadedFiles();
                 <?php if ($error): ?>
                 <div class="alert alert-danger" role="alert">
                     <?= htmlspecialchars($error) ?>
+                </div>
+                <?php endif; ?>
+
+                <div class="mb-2">
+                    <form method="get" class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="toggleDebug" name="debug" value="1" <?= $showDebug ? 'checked' : '' ?> onchange="this.form.submit()">
+                        <label class="form-check-label" for="toggleDebug">Режим отладки</label>
+                    </form>
+                </div>
+
+                <?php if ($showDebug): ?>
+                <div class="alert alert-secondary" role="alert">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <strong>Отладочная информация</strong>
+                        <a href="?" class="btn btn-sm btn-outline-secondary">Скрыть</a>
+                    </div>
+                    <pre style="white-space: pre-wrap; word-break: break-word; background: #f8f9fa; padding: 12px; border-radius: 6px; margin-top: 10px; max-height: 500px; overflow: auto;">
+<?= htmlspecialchars(json_encode($debugInfo, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)) ?>
+                    </pre>
+                </div>
+                <?php else: ?>
+                <div class="alert alert-light" role="alert">
+                    Для подробной диагностики включите режим отладки переключателем выше или параметром <a href="?debug=1">?debug=1</a>
                 </div>
                 <?php endif; ?>
             </div>

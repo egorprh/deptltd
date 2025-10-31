@@ -27,7 +27,7 @@ async function convertImages() {
         try {
           // Конвертируем в WebP
           await sharp(inputPath)
-            .webp({ quality: 80 })
+            .webp({ quality: 100 })
             .toFile(webpPath);
           
           // Удаляем исходный файл

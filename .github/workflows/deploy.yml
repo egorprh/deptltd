@@ -27,10 +27,13 @@ jobs:
         uploads/
         .git/
         .gitignore
+        .DS_Store
+        **/.DS_Store
         nginx.conf
         deploy/
         Dockerfile
         docker-compose.yml
+        data/portfolio-data.json
         EOF
         
         # Copy all files except excluded ones
@@ -63,6 +66,37 @@ jobs:
         source: "deploy/*"
         target: "/var/www/dev.dept.ltd/"
         strip_components: 1
+        
+    - name: Fix permissions and ensure writable paths
+      uses: appleboy/ssh-action@v0.1.5
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        script: |
+          set -e
+          ROOT_DIR=/var/www/dev.dept.ltd
+          DATA_DIR="$ROOT_DIR/data"
+          UPLOADS_DIR="$ROOT_DIR/uploads"
+          IMAGES_DIR="$UPLOADS_DIR/images"
+          PORTFOLIO_FILE="$DATA_DIR/portfolio-data.json"
+          WEB_USER=www-data
+          WEB_GROUP=www-data
+
+          mkdir -p "$DATA_DIR" "$IMAGES_DIR"
+          if [ ! -f "$PORTFOLIO_FILE" ]; then
+            echo '{"wallets":[],"activeWalletId":null}' > "$PORTFOLIO_FILE"
+          fi
+
+          chown -R "$WEB_USER":"$WEB_GROUP" "$DATA_DIR" "$UPLOADS_DIR" || true
+          find "$DATA_DIR" -type d -exec chmod 775 {} \; || true
+          find "$DATA_DIR" -type f -exec chmod 664 {} \; || true
+          find "$UPLOADS_DIR" -type d -exec chmod 775 {} \; || true
+          find "$UPLOADS_DIR" -type f -exec chmod 664 {} \; || true
+
+          # Print quick summary for debugging
+          ls -ld "$DATA_DIR" "$UPLOADS_DIR" "$IMAGES_DIR" || true
+          ls -l "$DATA_DIR" || true
           
     - name: Cleanup deploy directory
       run: |
