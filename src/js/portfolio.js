@@ -232,7 +232,6 @@ function updateCircularChart(assets) {
     portfolioChartInstance = new Chart(ctx, {
         type: 'doughnut',
         data: {
-            labels: labels,
             datasets: [{
                 data: data,
                 backgroundColor: backgroundColors,
@@ -247,9 +246,12 @@ function updateCircularChart(assets) {
             responsive: true,
             plugins: {
                 legend: { display: false },
-                tooltip: { enabled: true }
+                tooltip: { enabled: false }
             },
-            animation: { animateRotate: true, animateScale: true }
+            animation: { animateRotate: true },
+            hover: {
+                mode: null
+            },
         }
     });
 }
