@@ -127,7 +127,7 @@ $stats = getPortfolioStats();
                                             
                                             // Если нет загруженных иконок, показываем стандартные
                                             if (empty($tokenIcons)) {
-                                                $tokenIcons = ['BTC', 'ETH', 'USDT', 'AVAX', 'BNB', 'ADA', 'SOL', 'DOT', 'LINK', 'UNI', 'LTC', 'XRP', 'ATOM', 'FIL', 'ICP', 'HBAR', 'TON', 'TRB', 'RENDER', 'LDO', 'JTO', 'JUP', 'MOVE', 'OP', 'ORDI', 'PEPE', 'PNUT', 'POPCAT', 'SAND', 'TAO', 'TIA', 'TURBO', 'UXLINK', 'W', 'WIF', 'ZRO', 'AAPE', 'AGLD', 'APT', 'BAT', 'BERA', 'BOME', 'BRETT', 'DOT', 'ENA', 'GAS', 'GOAT', 'GRASS', 'LPT', 'S'];
+                                                $tokenIcons = ['BTC', 'ETH', 'USDT', 'AVAX', 'BNB', 'ADA', 'SOL', 'DOT', 'LINK', 'UNI', 'LTC', 'XRP', 'ATOM', 'FIL', 'ICP', 'HBAR', 'TON', 'TRB', 'RENDER', 'LDO', 'JTO', 'JUP', 'MOVE', 'OP', 'ORDI', 'PEPE', 'PNUT', 'POPCAT', 'SAND', 'TAO', 'TIA', 'TURBO', 'UXLINK', 'W', 'WIF', 'ZRO', 'AAPE', 'AGLD', 'APT', 'BAT', 'BERA', 'BOME', 'BRETT', 'DOT', 'ENA', 'GAS', 'GOAT', 'GRASS', 'LPT', 'S', 'HYPE'];
                                             }
                                             
                                             sort($tokenIcons);

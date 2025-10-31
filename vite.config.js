@@ -12,6 +12,7 @@ import { minify } from 'terser';
 export default defineConfig({
   // Базовая конфигурация Vite
   root: 'src',                    // Корневая папка исходников
+  publicDir: '../public',         // Явно указываем папку public на уровень выше root
   build: {
     outDir: '../dist',            // Папка для собранных файлов
     assetsDir: 'assets',         // Папка для статических ресурсов
