@@ -170,7 +170,8 @@ header {
 }
 
 .navbar-nav {
-  gap: 64px;
+  margin-left: calc(50% - 348px/2 - 115px/2 - 40px/2);
+  gap: 62px;
 
   .nav-link {
     font-family: var(--font-primary);
@@ -240,11 +241,11 @@ header {
 
 .hero-title-wrapper {
   flex-grow: 1;
-  padding-inline: 86px;
+  padding-inline: 64px;
 }
 
 .hero-title {
-  max-width: 560px;
+  max-width: 834px;
   font-family: var(--font-primary);
   font-weight: 500;
   font-size: var(--font-size-7xl);
@@ -266,6 +267,7 @@ header {
 .hero-btn {
   padding: 20px 24px;
   font-family: var(--font-mono);
+  letter-spacing: 0.03em;
 }
 
 .hero-btn-border {
@@ -317,8 +319,9 @@ header {
 }
 
 .tech-card {
-  padding: 28px 28px;
+  padding: 40px 28px 28px;
   border-radius: 28px;
+  gap: 12px;
 }
 
 .tech-h2-title {
@@ -370,6 +373,14 @@ header {
   border-right: 1px solid rgba(255, 255, 255, 0.3);
 }
 
+.tech-image img {
+  padding-inline: 16px;
+  max-height: 185px;
+  object-fit: fill;
+  background-position: center;
+  aspect-ratio: 1.41;
+}
+
 /* Investment section styles */
 .investment-container {
   margin-bottom: 88px;
@@ -417,6 +428,7 @@ header {
   padding: 64px 40px;
 
   .portfolio-value-title {
+    font-family: var(--font-primary);
     font-size: 32px;
     line-height: 28px;
   }
@@ -592,14 +604,14 @@ header {
 }
 
 .team-card {
-  max-width: 650px;
+  width: 650px;
   margin-inline: auto;
   border-radius: 20px;
 }
 
 .team-image img {
   width: 130px;
-  height: 100%;
+  height: 157px;
   border-radius: 14px;
   object-fit: cover;
 }
@@ -638,11 +650,12 @@ header {
 
 .team-card {
   display: grid;
-  grid-template-columns: auto 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto 0.93fr;
+  gap: 25px;
   grid-template-areas:
-    "image name name"
-    "image desc desc";
+    "image name"
+    "image desc";
 }
 
 .team-image {
@@ -659,7 +672,7 @@ header {
 .team-description {
   align-self: end;
   padding-bottom: 14px;
-  padding-right: 14px;
+  padding-right: 100px;
   grid-area: desc;
 }
 
@@ -734,6 +747,10 @@ footer img {
 
   .navbar {
     border-bottom: none;
+  }
+
+  .navbar-nav {
+    margin-left: auto;
   }
 
   .navbar-mobile {
@@ -833,8 +850,16 @@ footer img {
     margin-inline: 0;
 
     .col-lg-4 {
+      max-width: 60%;
+      margin-inline: auto;
       padding-inline: 0 !important;
     }
+  }
+
+  .tech-image img {
+    max-height: 220px;
+    object-fit: fill;
+    background-position: center;
   }
 
   .tech-h2-title {
@@ -954,18 +979,30 @@ footer img {
     padding: 48px 40px;
   }
 
+  .tech-cards {
+    .col-lg-4 {
+      max-width: 100%;
+    }
+  }
+
   .team-card {
-    grid-template-columns: auto 1fr;
-    grid-template-rows: auto 1fr;
-    gap: 0px 0px;
+    width: 100%;
+    grid-template-columns: 130px 1fr;
+    grid-template-rows: 157px 1fr;
     grid-template-areas:
     "image name"
     "desc desc";
+    gap: 20px;
   }
 
   .team-info {
     padding: 0;
     align-self: center;
+  }
+
+  .team-description {
+    padding-bottom: 12px;
+    padding-right: 0;
   }
 
   .team-name {
