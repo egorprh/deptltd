@@ -55,7 +55,7 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         script: |
-          mkdir -p /var/www/dept.ltd
+          mkdir -p /var/www/fastuser/data/dept.ltd
           
     - name: Deploy to server
       uses: appleboy/scp-action@v0.1.4
@@ -64,7 +64,7 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         source: "deploy/*"
-        target: "/var/www/dept.ltd/"
+        target: "/var/www/fastuser/data/dept.ltd/"
         strip_components: 1
         
     - name: Fix permissions and ensure writable paths
@@ -75,7 +75,7 @@ jobs:
         password: ${{ secrets.PASSWORD }}
         script: |
           set -e
-          ROOT_DIR=/var/www/dept.ltd
+          ROOT_DIR=/var/www/fastuser/data/dept.ltd
           DATA_DIR="$ROOT_DIR/data"
           UPLOADS_DIR="$ROOT_DIR/uploads"
           IMAGES_DIR="$UPLOADS_DIR/images"
