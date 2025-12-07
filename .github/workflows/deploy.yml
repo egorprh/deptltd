@@ -1,103 +1,103 @@
-name: Deploy to Server
+# name: Deploy to Server
 
-on:
-  push:
-    branches: [ main ]
+# on:
+#   push:
+#     branches: [ main ]
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
     
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+#     steps:
+#     - name: Checkout code
+#       uses: actions/checkout@v3
       
-    - name: Create deploy directory
-      run: |
-        rm -rf deploy
-        mkdir -p deploy
+#     - name: Create deploy directory
+#       run: |
+#         rm -rf deploy
+#         mkdir -p deploy
         
-    - name: Copy files to deploy directory
-      run: |
-        # Create exclude list
-        cat > /tmp/deploy_exclude.txt << EOF
-        .github/
-        node_modules/
-        scripts/
-        uploads/
-        .git/
-        .gitignore
-        .DS_Store
-        **/.DS_Store
-        nginx.conf
-        deploy/
-        Dockerfile
-        docker-compose.yml
-        data/portfolio-data.json
-        EOF
+#     - name: Copy files to deploy directory
+#       run: |
+#         # Create exclude list
+#         cat > /tmp/deploy_exclude.txt << EOF
+#         .github/
+#         node_modules/
+#         scripts/
+#         uploads/
+#         .git/
+#         .gitignore
+#         .DS_Store
+#         **/.DS_Store
+#         nginx.conf
+#         deploy/
+#         Dockerfile
+#         docker-compose.yml
+#         data/portfolio-data.json
+#         EOF
         
-        # Copy all files except excluded ones
-        rsync -av --exclude-from=/tmp/deploy_exclude.txt \
-          --exclude='config.php' \
-          . deploy/
+#         # Copy all files except excluded ones
+#         rsync -av --exclude-from=/tmp/deploy_exclude.txt \
+#           --exclude='config.php' \
+#           . deploy/
         
-        # Clean up exclude file
-        rm /tmp/deploy_exclude.txt
+#         # Clean up exclude file
+#         rm /tmp/deploy_exclude.txt
         
-        # Show what we're deploying
-        echo "Files to be deployed:"
-        find deploy -type f
+#         # Show what we're deploying
+#         echo "Files to be deployed:"
+#         find deploy -type f
         
-    - name: Create server directory if not exists
-      uses: appleboy/ssh-action@v0.1.5
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        password: ${{ secrets.PASSWORD }}
-        script: |
-          mkdir -p /var/www/fastuser/data/www/dept.ltd
+#     - name: Create server directory if not exists
+#       uses: appleboy/ssh-action@v0.1.5
+#       with:
+#         host: ${{ secrets.HOST }}
+#         username: ${{ secrets.USERNAME }}
+#         password: ${{ secrets.PASSWORD }}
+#         script: |
+#           mkdir -p /var/www/fastuser/data/www/dept.ltd
           
-    - name: Deploy to server
-      uses: appleboy/scp-action@v0.1.4
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        password: ${{ secrets.PASSWORD }}
-        source: "deploy/*"
-        target: "/var/www/fastuser/data/www/dept.ltd/"
-        strip_components: 1
+#     - name: Deploy to server
+#       uses: appleboy/scp-action@v0.1.4
+#       with:
+#         host: ${{ secrets.HOST }}
+#         username: ${{ secrets.USERNAME }}
+#         password: ${{ secrets.PASSWORD }}
+#         source: "deploy/*"
+#         target: "/var/www/fastuser/data/www/dept.ltd/"
+#         strip_components: 1
         
-    - name: Fix permissions and ensure writable paths
-      uses: appleboy/ssh-action@v0.1.5
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        password: ${{ secrets.PASSWORD }}
-        script: |
-          set -e
-          ROOT_DIR=/var/www/fastuser/data/www/dept.ltd
-          DATA_DIR="$ROOT_DIR/data"
-          UPLOADS_DIR="$ROOT_DIR/uploads"
-          IMAGES_DIR="$UPLOADS_DIR/images"
-          PORTFOLIO_FILE="$DATA_DIR/portfolio-data.json"
-          WEB_USER=www-data
-          WEB_GROUP=www-data
+#     - name: Fix permissions and ensure writable paths
+#       uses: appleboy/ssh-action@v0.1.5
+#       with:
+#         host: ${{ secrets.HOST }}
+#         username: ${{ secrets.USERNAME }}
+#         password: ${{ secrets.PASSWORD }}
+#         script: |
+#           set -e
+#           ROOT_DIR=/var/www/fastuser/data/www/dept.ltd
+#           DATA_DIR="$ROOT_DIR/data"
+#           UPLOADS_DIR="$ROOT_DIR/uploads"
+#           IMAGES_DIR="$UPLOADS_DIR/images"
+#           PORTFOLIO_FILE="$DATA_DIR/portfolio-data.json"
+#           WEB_USER=www-data
+#           WEB_GROUP=www-data
 
-          mkdir -p "$DATA_DIR" "$IMAGES_DIR"
-          if [ ! -f "$PORTFOLIO_FILE" ]; then
-            echo '{"wallets":[],"activeWalletId":null}' > "$PORTFOLIO_FILE"
-          fi
+#           mkdir -p "$DATA_DIR" "$IMAGES_DIR"
+#           if [ ! -f "$PORTFOLIO_FILE" ]; then
+#             echo '{"wallets":[],"activeWalletId":null}' > "$PORTFOLIO_FILE"
+#           fi
 
-          chown -R "$WEB_USER":"$WEB_GROUP" "$DATA_DIR" "$UPLOADS_DIR" || true
-          find "$DATA_DIR" -type d -exec chmod 775 {} \; || true
-          find "$DATA_DIR" -type f -exec chmod 664 {} \; || true
-          find "$UPLOADS_DIR" -type d -exec chmod 775 {} \; || true
-          find "$UPLOADS_DIR" -type f -exec chmod 664 {} \; || true
+#           chown -R "$WEB_USER":"$WEB_GROUP" "$DATA_DIR" "$UPLOADS_DIR" || true
+#           find "$DATA_DIR" -type d -exec chmod 775 {} \; || true
+#           find "$DATA_DIR" -type f -exec chmod 664 {} \; || true
+#           find "$UPLOADS_DIR" -type d -exec chmod 775 {} \; || true
+#           find "$UPLOADS_DIR" -type f -exec chmod 664 {} \; || true
 
-          # Print quick summary for debugging
-          ls -ld "$DATA_DIR" "$UPLOADS_DIR" "$IMAGES_DIR" || true
-          ls -l "$DATA_DIR" || true
+#           # Print quick summary for debugging
+#           ls -ld "$DATA_DIR" "$UPLOADS_DIR" "$IMAGES_DIR" || true
+#           ls -l "$DATA_DIR" || true
           
-    - name: Cleanup deploy directory
-      run: |
-        rm -rf deploy
+#     - name: Cleanup deploy directory
+#       run: |
+#         rm -rf deploy
